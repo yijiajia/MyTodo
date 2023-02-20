@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodo.R
 import com.example.mytodo.logic.domain.Constants
@@ -18,7 +20,8 @@ import com.example.mytodo.logic.showToast
 import com.example.mytodo.ui.viewModel.TasksViewModel
 import com.google.android.material.textview.MaterialTextView
 
-class TasksAdapter(private var list: List<Task>, val viewModel: TasksViewModel) : RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
+class TasksAdapter(val viewModel: TasksViewModel)
+    : ListAdapter<Task,TasksAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     inner class ViewHolder(view : View) : RecyclerView.ViewHolder(view) {
         val checkTaskBtn : ImageButton = view.findViewById(R.id.check_task_button)
@@ -36,7 +39,7 @@ class TasksAdapter(private var list: List<Task>, val viewModel: TasksViewModel) 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val task = list[position]
+        val task = getItem(position)
         if (task.state == TaskState.DOING) {
             holder.nameText.text = task.name
             holder.checkTaskBtn.setImageResource(R.drawable.ic_select)
@@ -48,7 +51,7 @@ class TasksAdapter(private var list: List<Task>, val viewModel: TasksViewModel) 
                 spannableString.length,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
-            holder.nameText.text = spannableString
+            holder.nameText.text = spannableString  /** 划线的效果 **/
             holder.checkTaskBtn.setImageResource(R.drawable.ic_select_check)
         }
         if(task.isStart) {
@@ -71,5 +74,16 @@ class TasksAdapter(private var list: List<Task>, val viewModel: TasksViewModel) 
         }
     }
 
-    override fun getItemCount() = list.size
+
+    companion object {
+        private val DIFF_CALLBACK = object :
+            DiffUtil.ItemCallback<Task>() {
+
+            override fun areItemsTheSame(oldTask: Task, newTask: Task) =
+                oldTask.id == newTask.id
+
+            override fun areContentsTheSame(oldTask: Task, newTask: Task) =
+                oldTask == newTask
+        }
+    }
 }

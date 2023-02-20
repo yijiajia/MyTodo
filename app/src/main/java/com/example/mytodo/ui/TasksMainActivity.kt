@@ -68,19 +68,16 @@ class TasksMainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)   // 显示home图标
         collapsingToolbar.title = projectName
 
-        val adapter = TasksAdapter(taskViewModel.tasksList,taskViewModel)
+        val adapter = TasksAdapter(taskViewModel)
         taskRecyclerView.layoutManager = LinearLayoutManager(this)
         taskRecyclerView.adapter = adapter
-
 
         taskViewModel.tasksLiveData.observe(this) { result ->
             val taskList = result.getOrNull()
             if (taskList != null) {
                 Log.d(Constants.TASK_PAGE_TAG, "任务刷新成功，任务列表为：$taskList")
                 taskRecyclerView.visibility = View.VISIBLE
-                taskViewModel.tasksList.clear()
-                taskViewModel.tasksList.addAll(taskList)
-                adapter.notifyDataSetChanged()
+                adapter.submitList(taskList)
             } else {
                 "未能查询到任务".showToast()
                 result.exceptionOrNull()?.printStackTrace()

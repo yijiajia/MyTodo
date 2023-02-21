@@ -1,6 +1,7 @@
-package com.example.mytodo.ui
+package com.example.mytodo.ui.task
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.mytodo.MyToDoApplication
 import com.example.mytodo.R
 import com.example.mytodo.logic.Cmd
 import com.example.mytodo.logic.dao.SearchArg
@@ -25,9 +27,8 @@ import com.example.mytodo.logic.domain.ProjectSign
 import com.example.mytodo.logic.domain.entity.Task
 import com.example.mytodo.logic.domain.TaskState
 import com.example.mytodo.logic.showToast
-import com.example.mytodo.ui.adapter.TasksAdapter
-import com.example.mytodo.ui.viewModel.TasksViewModel
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class TasksMainActivity : AppCompatActivity() {
@@ -36,7 +37,6 @@ class TasksMainActivity : AppCompatActivity() {
     private var projectId = 0L
     private var projectName = ""
     private var projectSign : ProjectSign? = null
-
 
     private lateinit var editTaskName : EditText
     private lateinit var addTasksFab : FloatingActionButton
@@ -71,6 +71,26 @@ class TasksMainActivity : AppCompatActivity() {
         val adapter = TasksAdapter(taskViewModel)
         taskRecyclerView.layoutManager = LinearLayoutManager(this)
         taskRecyclerView.adapter = adapter
+
+        adapter.taskClickListener = object : TasksAdapter.TaskClickListener {
+            override fun onTaskClick(task: Task, card: MaterialCardView) {
+                Log.d(Constants.MAIN_PAGE_TAG, "click item card; id=$taskId")
+                val intent = Intent(MyToDoApplication.context, EditTaskActivity::class.java).apply {
+                    putExtra(Constants.TASK,task)
+                    putExtra(Constants.PROJECT_NAME,projectName)
+                }
+                startActivity(intent)
+            }
+
+            override fun onTaskDoneClick(task: Task) {
+                Log.d(Constants.MAIN_PAGE_TAG, "done item; id=$taskId")
+            }
+
+            override fun onTaskDoingClick(task: Task) {
+                Log.d(Constants.MAIN_PAGE_TAG, "doing item; id=$taskId")
+            }
+        }
+
 
         taskViewModel.tasksLiveData.observe(this) { result ->
             val taskList = result.getOrNull()

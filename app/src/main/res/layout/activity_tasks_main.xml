@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/blue"
     android:fitsSystemWindows="true"
-    tools:context=".ui.TasksMainActivity">
+    tools:context=".ui.task.TasksMainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/tasks_app_bar"

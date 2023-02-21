@@ -1,4 +1,4 @@
-package com.example.mytodo.ui
+package com.example.mytodo.ui.project
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -10,7 +10,6 @@ import com.example.mytodo.R
 import com.example.mytodo.logic.domain.Constants
 import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.logic.showToast
-import com.example.mytodo.ui.viewModel.ProjectViewModel
 
 class AddProjectDiaLogFragment(val viewModel: ProjectViewModel) : DialogFragment() {
 

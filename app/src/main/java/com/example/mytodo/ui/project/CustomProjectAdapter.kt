@@ -1,4 +1,4 @@
-package com.example.mytodo.ui.adapter
+package com.example.mytodo.ui.project
 
 import android.app.AlertDialog
 import android.content.Context
@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodo.R
 import com.example.mytodo.logic.domain.Constants
 import com.example.mytodo.logic.domain.entity.Project
-import com.example.mytodo.ui.TasksMainActivity
-import com.example.mytodo.ui.viewModel.ProjectViewModel
+import com.example.mytodo.ui.task.TasksMainActivity
 
 class CustomProjectAdapter(val context: Context, val customProjectList: List<Project>, val viewModel: ProjectViewModel) : RecyclerView.Adapter<CustomProjectAdapter.ViewHolder>() {
 

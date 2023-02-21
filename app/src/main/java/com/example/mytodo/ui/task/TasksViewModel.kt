@@ -1,4 +1,4 @@
-package com.example.mytodo.ui.viewModel
+package com.example.mytodo.ui.task
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations

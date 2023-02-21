@@ -9,6 +9,8 @@ class Constants {
         const val TASK_PAGE_TAG = "taskPage"    // 任务页面
 
         const val PROJECT_SIGN = "projectSign"
+
+        const val TASK = "task"
     }
 
 }

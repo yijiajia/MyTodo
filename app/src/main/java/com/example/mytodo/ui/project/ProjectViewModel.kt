@@ -1,4 +1,4 @@
-package com.example.mytodo.ui.viewModel
+package com.example.mytodo.ui.project
 
 import android.util.Log
 import androidx.lifecycle.*

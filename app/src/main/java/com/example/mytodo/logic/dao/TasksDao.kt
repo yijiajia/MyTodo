@@ -17,7 +17,7 @@ interface TasksDao {
     @Query("select * from task")
     fun searchAllTasks() : List<Task>
 
-    @Query("select * from task where isStart = 1")
+    @Query("select * from task where isStart = 1 and state = 0")
     fun searchImportantTasks() : List<Task>
 
     @Query("delete from task where id = :id")

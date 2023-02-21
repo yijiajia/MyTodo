@@ -11,13 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodo.logic.domain.Constants
-import com.example.mytodo.ui.adapter.CustomProjectAdapter
-import com.example.mytodo.ui.adapter.DefaultProjectAdapter
+import com.example.mytodo.ui.project.CustomProjectAdapter
+import com.example.mytodo.ui.project.DefaultProjectAdapter
 import com.example.mytodo.logic.domain.ProjectSign
 import com.example.mytodo.logic.mapper.ProjectVo
 import com.example.mytodo.logic.showToast
-import com.example.mytodo.ui.AddProjectDiaLogFragment
-import com.example.mytodo.ui.viewModel.ProjectViewModel
+import com.example.mytodo.ui.project.AddProjectDiaLogFragment
+import com.example.mytodo.ui.project.ProjectViewModel
 import com.google.android.material.bottomappbar.BottomAppBar
 
 class MainActivity : AppCompatActivity() {
@@ -90,6 +90,20 @@ class MainActivity : AppCompatActivity() {
         Log.d(Constants.MAIN_PAGE_TAG,"onResume ")
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_tool_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.search_task -> {
+                Toast.makeText(this, "搜索", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return true
+    }
+
     private fun refreshObserve() {
 
         // 刷新自定义创建的Project 以及 默认Project中的所有任务
@@ -151,20 +165,6 @@ class MainActivity : AppCompatActivity() {
             Log.d(Constants.MAIN_PAGE_TAG,"del project $id is suc, flush page")
             viewModel.searchProjectList()   // 更新
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_tool_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.search_task -> {
-                Toast.makeText(this, "搜索", Toast.LENGTH_SHORT).show()
-            }
-        }
-        return true
     }
 
 }

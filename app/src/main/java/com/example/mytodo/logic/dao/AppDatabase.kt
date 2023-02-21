@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.mytodo.logic.convert.LocalDateTimeConverter
 import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.logic.domain.entity.Task
 
 @Database(version = 2, entities = [Project::class, Task::class])
+@TypeConverters(LocalDateTimeConverter::class)
 abstract class AppDatabase : RoomDatabase(){
 
     abstract fun getProjectDao() : ProjectDao

@@ -10,10 +10,10 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mytodo.logic.domain.Constants
+import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.ui.project.CustomProjectAdapter
 import com.example.mytodo.ui.project.DefaultProjectAdapter
-import com.example.mytodo.logic.domain.ProjectSign
+import com.example.mytodo.logic.domain.constants.ProjectSign
 import com.example.mytodo.logic.mapper.ProjectVo
 import com.example.mytodo.logic.showToast
 import com.example.mytodo.ui.project.AddProjectDiaLogFragment

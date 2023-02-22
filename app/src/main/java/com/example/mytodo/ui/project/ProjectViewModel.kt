@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.example.mytodo.R
 import com.example.mytodo.logic.Repository
-import com.example.mytodo.logic.domain.*
+import com.example.mytodo.logic.domain.constants.Constants
+import com.example.mytodo.logic.domain.constants.ProjectSign
+import com.example.mytodo.logic.domain.constants.ProjectSignValue
 import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.logic.mapper.ProjectVo
 import kotlinx.coroutines.*
@@ -36,8 +38,8 @@ class ProjectViewModel : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             Log.d(Constants.MAIN_PAGE_TAG,"searchProjectList invoke")
             val projectList = ArrayList<Project>()
-            projectList.add(Project(ProjectSign.INTRO.signName,0,ProjectSign.INTRO.imageId))
-            projectList.add(Project(ProjectSign.ZAHUO.signName,0,ProjectSign.ZAHUO.imageId))
+            projectList.add(Project(ProjectSign.INTRO.signName,0, ProjectSign.INTRO.imageId))
+            projectList.add(Project(ProjectSign.ZAHUO.signName,0, ProjectSign.ZAHUO.imageId))
             projectList.addAll(Repository.getProjectList())
             projectLiveData.postValue(projectList)
         }

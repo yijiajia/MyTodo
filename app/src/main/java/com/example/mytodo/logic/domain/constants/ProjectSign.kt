@@ -1,4 +1,4 @@
-package com.example.mytodo.logic.domain
+package com.example.mytodo.logic.domain.constants
 
 import com.example.mytodo.R
 import java.io.Serializable

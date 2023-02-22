@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.example.mytodo.R
-import com.example.mytodo.logic.domain.Constants
+import com.example.mytodo.logic.TaskClickListener
+import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Task
-import com.example.mytodo.logic.domain.TaskState
+import com.example.mytodo.logic.domain.constants.TaskState
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 
@@ -109,9 +110,4 @@ class TasksAdapter(val viewModel: TasksViewModel)
         }
     }
 
-    interface TaskClickListener {
-        fun onTaskClick(task: Task, card: MaterialCardView)
-        fun onTaskDoneClick(task: Task)
-        fun onTaskDoingClick(task: Task)
-    }
 }

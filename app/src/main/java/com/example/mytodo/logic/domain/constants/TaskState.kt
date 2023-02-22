@@ -1,4 +1,4 @@
-package com.example.mytodo.logic.domain
+package com.example.mytodo.logic.domain.constants
 
 class TaskState {
     companion object {

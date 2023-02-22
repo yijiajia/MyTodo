@@ -15,17 +15,19 @@ import android.widget.ImageButton
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.mytodo.MyToDoApplication
 import com.example.mytodo.R
 import com.example.mytodo.logic.Cmd
+import com.example.mytodo.logic.TaskClickListener
 import com.example.mytodo.logic.dao.SearchArg
-import com.example.mytodo.logic.domain.Constants
-import com.example.mytodo.logic.domain.ProjectSign
+import com.example.mytodo.logic.domain.constants.Constants
+import com.example.mytodo.logic.domain.constants.ProjectSign
 import com.example.mytodo.logic.domain.entity.Task
-import com.example.mytodo.logic.domain.TaskState
+import com.example.mytodo.logic.domain.constants.TaskState
 import com.example.mytodo.logic.showToast
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.card.MaterialCardView
@@ -41,18 +43,21 @@ class TasksMainActivity : AppCompatActivity() {
     private lateinit var editTaskName : EditText
     private lateinit var addTasksFab : FloatingActionButton
     private lateinit var addTaskLayout : ConstraintLayout
+    private lateinit var adapter: TasksAdapter
+    private lateinit var addTaskBtn: ImageButton
+    private lateinit var taskRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tasks_main)
-        val taskRecyclerView: RecyclerView = findViewById(R.id.task_recycle_view)
+        taskRecyclerView = findViewById(R.id.task_recycle_view)
         addTasksFab = findViewById(R.id.add_task_fab)
         val toolbar: Toolbar = findViewById(R.id.tasks_tool_bar)
         val collapsingToolbar: CollapsingToolbarLayout = findViewById(R.id.tasks_collapsingToolbar)
         editTaskName = findViewById(R.id.edit_task_name)
         addTaskLayout = findViewById(R.id.addTaskLayout)
         val swipeRefreshTask: SwipeRefreshLayout = findViewById(R.id.swipe_refresh_task)
-        val addTaskBtn: ImageButton = findViewById(R.id.add_task_btn)
+        addTaskBtn = findViewById(R.id.add_task_btn)
 
         projectId = intent.getLongExtra(Constants.PROJECT_ID, 0L)
         projectName = intent.getStringExtra(Constants.PROJECT_NAME).toString()
@@ -61,6 +66,8 @@ class TasksMainActivity : AppCompatActivity() {
             projectSign = serializable as ProjectSign
         }
 
+        viewModelOwner = this
+
         Log.d(Constants.TASK_PAGE_TAG, "projectId = $projectId, projectName= $projectName")
         refreshList()
 
@@ -68,11 +75,54 @@ class TasksMainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)   // 显示home图标
         collapsingToolbar.title = projectName
 
-        val adapter = TasksAdapter(taskViewModel)
+        adapter = TasksAdapter(taskViewModel)
         taskRecyclerView.layoutManager = LinearLayoutManager(this)
         taskRecyclerView.adapter = adapter
 
-        adapter.taskClickListener = object : TasksAdapter.TaskClickListener {
+        initClickListener()
+
+
+        // 下拉刷新
+        swipeRefreshTask.setOnRefreshListener {
+            refreshList()
+            swipeRefreshTask.isRefreshing = false   // 取消刷新状态
+        }
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(Constants.TASK_PAGE_TAG,"on start")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(Constants.TASK_PAGE_TAG,"on resume")
+        initObserve()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModelOwner = null
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+        }
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.task_tool_bar,menu)
+        return true
+    }
+
+    private fun initClickListener() {
+
+        adapter.taskClickListener = object : TaskClickListener {
             override fun onTaskClick(task: Task, card: MaterialCardView) {
                 Log.d(Constants.MAIN_PAGE_TAG, "click item card; id=$taskId")
                 val intent = Intent(MyToDoApplication.context, EditTaskActivity::class.java).apply {
@@ -88,19 +138,6 @@ class TasksMainActivity : AppCompatActivity() {
 
             override fun onTaskDoingClick(task: Task) {
                 Log.d(Constants.MAIN_PAGE_TAG, "doing item; id=$taskId")
-            }
-        }
-
-
-        taskViewModel.tasksLiveData.observe(this) { result ->
-            val taskList = result.getOrNull()
-            if (taskList != null) {
-                Log.d(Constants.TASK_PAGE_TAG, "任务刷新成功，任务列表为：$taskList")
-                taskRecyclerView.visibility = View.VISIBLE
-                adapter.submitList(taskList)
-            } else {
-                "未能查询到任务".showToast()
-                result.exceptionOrNull()?.printStackTrace()
             }
         }
 
@@ -124,6 +161,23 @@ class TasksMainActivity : AppCompatActivity() {
             }
             true
         }
+    }
+
+
+    private fun initObserve() {
+
+        taskViewModel.tasksLiveData.observe(this) { result ->
+            val taskList = result.getOrNull()
+            if (taskList != null) {
+                Log.d(Constants.TASK_PAGE_TAG, "任务刷新成功，任务列表为：$taskList")
+                taskRecyclerView.visibility = View.VISIBLE
+                adapter.submitList(taskList)
+            } else {
+                "未能查询到任务".showToast()
+                result.exceptionOrNull()?.printStackTrace()
+            }
+        }
+
 
         taskViewModel.insertTaskLiveData.observe(this) { result ->
             if (result.getOrNull() != null) {
@@ -149,12 +203,14 @@ class TasksMainActivity : AppCompatActivity() {
             }
         }
 
-        // 下拉刷新
-        swipeRefreshTask.setOnRefreshListener {
-            refreshList()
-            swipeRefreshTask.isRefreshing = false   // 取消刷新状态
+        taskViewModel.delTaskLiveData.observe(this) { result ->
+            "删除完成".showToast()
+            if (result.getOrNull() != null) {
+                refreshList()   // 刷新界面
+            } else {
+                "更新异常".showToast()
+            }
         }
-
     }
 
     private fun insertTask() {
@@ -177,21 +233,6 @@ class TasksMainActivity : AppCompatActivity() {
             "输入框为空".showToast()
         }
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-            }
-        }
-        return true
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.task_tool_bar,menu)
-        return true
-    }
-
 
     private fun refreshList() {
         val searchArg = SearchArg(Cmd.SEARCH_BY_PID)
@@ -216,5 +257,8 @@ class TasksMainActivity : AppCompatActivity() {
         taskViewModel.searchTasks(searchArg)
     }
 
+    companion object {
+        var viewModelOwner : ViewModelStoreOwner? = null
+    }
 
 }

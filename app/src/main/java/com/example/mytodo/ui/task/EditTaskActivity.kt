@@ -1,19 +1,20 @@
 package com.example.mytodo.ui.task
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
-import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import com.example.mytodo.R
-import com.example.mytodo.logic.domain.Constants
-import com.example.mytodo.logic.domain.TaskState
+import com.example.mytodo.logic.domain.constants.Constants
+import com.example.mytodo.logic.domain.constants.TaskState
 import com.example.mytodo.logic.domain.entity.Task
 import com.example.mytodo.logic.showToast
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -21,6 +22,7 @@ import com.google.android.material.textview.MaterialTextView
 
 class EditTaskActivity : AppCompatActivity() {
 
+    private val taskViewModel by lazy { TasksMainActivity.viewModelOwner?.let { ViewModelProvider(it).get(TasksViewModel::class.java) } }
     private lateinit var task : Task
     private lateinit var projectName : String
 
@@ -87,8 +89,10 @@ class EditTaskActivity : AppCompatActivity() {
                      builder.setTitle("你确定吗？")
                          .setMessage("将永久删除“${task.name}”")
                          .setPositiveButton("删除") { dialog, _ ->
-                             "删除任务".showToast()
+                             "删除任务222".showToast()
+                             taskViewModel?.delTask(task)
                              dialog.dismiss()
+                             finish()
                          }
                          .setNegativeButton("取消"){ dialog, _ ->
                              "取消了任务".showToast()

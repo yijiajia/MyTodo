@@ -7,7 +7,7 @@ import android.util.Log
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.example.mytodo.R
-import com.example.mytodo.logic.domain.Constants
+import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.logic.showToast
 

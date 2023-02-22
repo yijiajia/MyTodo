@@ -1,10 +1,12 @@
 package com.example.mytodo.ui.task
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.mytodo.logic.Repository
 import com.example.mytodo.logic.dao.SearchArg
+import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Task
 
 class TasksViewModel : ViewModel() {
@@ -51,6 +53,16 @@ class TasksViewModel : ViewModel() {
     }
     val startTaskLiveData = Transformations.switchMap(setStartLiveData) { task ->
         Repository.updateTaskStart(task.id,task.isStart)
+    }
+
+    // 删除任务
+    private val delLiveData = MutableLiveData<Task>()
+    fun delTask(task: Task) {
+        delLiveData.value = task
+    }
+    val delTaskLiveData = Transformations.switchMap(delLiveData) {
+        Log.d(Constants.TASK_PAGE_TAG,"准备删除数据")
+        Repository.deleteTask(it)
     }
 
 

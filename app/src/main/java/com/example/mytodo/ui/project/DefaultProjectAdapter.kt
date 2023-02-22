@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodo.R
-import com.example.mytodo.logic.domain.Constants
+import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.mapper.ProjectVo
 import com.example.mytodo.ui.task.TasksMainActivity
 

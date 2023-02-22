@@ -1,4 +1,4 @@
-package com.example.mytodo.logic.domain
+package com.example.mytodo.logic.domain.constants
 
 /**
  * 默认项目的数目字段

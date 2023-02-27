@@ -30,7 +30,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="80dp">
 
             <include layout="@layout/fragment_task" />
         </com.google.android.material.card.MaterialCardView>
@@ -190,6 +190,10 @@
             android:clickable="true"
             android:focusable="true"
             app:cardCornerRadius="4dp">
+            <EditText
+                android:id="@+id/edit_task_desc"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </com.google.android.material.card.MaterialCardView>
 

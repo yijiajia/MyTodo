@@ -70,6 +70,10 @@ object Repository {
         Result.success(tasksDao.deleteTaskById(task.id))
     }
 
+    fun updateTask(task: Task) = fire(Dispatchers.IO) {
+        Result.success(tasksDao.updateTask(task))
+    }
+
     fun updateTaskState(id: Long,state: Int) = fire(Dispatchers.IO) {
         Result.success(tasksDao.updateTaskState(id, state))
     }

@@ -59,6 +59,15 @@ class ExampleInstrumentedTest {
             Log.d("test",LocalDateTime.now().toStringDesc())
             Log.d("test",LocalDateTime.now().toSH().toString())
         }
+    }
 
+    @Test
+    fun ArrayTest() {
+        runBlocking {
+            val ans = Array(5) {
+                it * it
+            }
+            println(ans)
+        }
     }
 }

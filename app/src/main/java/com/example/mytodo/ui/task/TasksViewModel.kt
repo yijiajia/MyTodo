@@ -34,26 +34,19 @@ class TasksViewModel : ViewModel() {
 
     // 更新状态
     private val updateLiveData = MutableLiveData<Task>()
-    fun updateState(id: Long,state : Int) {
-        updateLiveData.value = Task().apply {
-            this.state = state
-            this.id = id
-        }
+    fun updateTask(task: Task) {
+        updateLiveData.value = task
     }
 
     val updateTaskLiveDate = Transformations.switchMap(updateLiveData) { task ->
-        Repository.updateTaskState(task.id, task.state)
+        Repository.updateTask(task)
     }
 
     // 设为重要的
     private val setStartLiveData = MutableLiveData<Task>()
-    fun setStart(id: Long, flag: Int, isStart: Boolean) {
+    fun setStart(id: Long, flag: Int) {
         setStartLiveData.value = Task().apply {
-            if (isStart) {
-                this.flag = FlagHelper.addFlag(flag, Task.IS_START)
-            }else {
-                this.flag = FlagHelper.removeFlag(flag,Task.IS_START)
-            }
+            this.flag = flag
             this.id = id
         }
     }

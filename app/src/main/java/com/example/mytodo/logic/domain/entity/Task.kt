@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import com.example.mytodo.logic.toSH
 import java.io.Serializable
 import java.time.LocalDateTime
+import java.util.*
 
 @Entity
 data class Task(
@@ -26,6 +27,21 @@ data class Task(
 
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
+
+    override fun hashCode(): Int {
+        return Objects.hash(id,name)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return when(other) {
+            !is Task -> false
+            else -> this === other
+                    || (id == other.id
+                        && name == other.name
+                        && flag == other.flag
+                        && description == other.description)
+        }
+    }
 
 
     /**

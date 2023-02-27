@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.example.mytodo.R
 import com.example.mytodo.logic.TaskClickListener
+import com.example.mytodo.logic.domain.TaskItem
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Task
 import com.example.mytodo.logic.domain.constants.TaskState
@@ -52,25 +54,11 @@ class TasksAdapter(val viewModel: TasksViewModel)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val task = getItem(position)
-        if (task.state == TaskState.DOING) {
-            holder.nameText.text = task.name
-            holder.checkTaskBtn.setImageResource(R.drawable.ic_select)
-        }else {
-            val spannableString = SpannableString(task.name)
-            spannableString.setSpan(
-                StrikethroughSpan(),
-                0,
-                spannableString.length,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            holder.nameText.text = spannableString  /** 划线的效果 **/
-            holder.checkTaskBtn.setImageResource(R.drawable.ic_select_check)
-        }
-        var curStartState = FlagHelper.containsFlag(task.flag, Task.IS_START)
-        if(curStartState) {
-            holder.setTaskStartBtn.setImageResource(R.drawable.ic_shoucang_check)
-        }
+        val taskItem = TaskItem(holder.nameText, holder.checkTaskBtn, holder.setTaskStartBtn, task)
+        taskItem.initItem()
+        taskItem.initClickListener(viewModel)
 
+        /*val curStartState = FlagHelper.containsFlag(task.flag, Task.IS_START)
         holder.checkTaskBtn.setOnClickListener {
             val upState = if (task.state == TaskState.DONE) {
                 taskClickListener.onTaskDoingClick(task)
@@ -84,7 +72,6 @@ class TasksAdapter(val viewModel: TasksViewModel)
             val toastName = if (upState == TaskState.DOING) "正在做" else  "做完"
             viewModel.updateState(task.id, upState)
             Log.d(Constants.TASK_PAGE_TAG,"update task state id= ${task.id} state for $upState；toastName=$toastName")
-//            toastName.showToast()
         }
 
         holder.setTaskStartBtn.setOnClickListener {
@@ -92,7 +79,7 @@ class TasksAdapter(val viewModel: TasksViewModel)
             viewModel.setStart(task.id, task.flag ,isStart)
             holder.setTaskStartBtn.setImageResource(R.drawable.ic_shoucang_check)
             Log.d(Constants.TASK_PAGE_TAG,"update task start id= ${task.id} isStart for $isStart")
-        }
+        }*/
 
         holder.cardView.setOnClickListener {
             taskClickListener.onTaskClick(task, holder.cardView)

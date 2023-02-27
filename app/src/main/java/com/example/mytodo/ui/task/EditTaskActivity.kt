@@ -10,6 +10,8 @@ import android.text.Spanned
 import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -19,6 +21,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.mytodo.R
+import com.example.mytodo.logic.domain.TaskItem
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.constants.TaskState
 import com.example.mytodo.logic.domain.entity.Task
@@ -33,10 +36,13 @@ class EditTaskActivity : AppCompatActivity() {
 
     private val taskViewModel by lazy {  ViewModelProvider(TasksMainActivity.viewModelOwner!!).get(TasksViewModel::class.java) }
     private lateinit var task : Task
+    private lateinit var originTask : Task
     private lateinit var projectName : String
 
     private lateinit var addToOneDayIcon : ImageView
     private lateinit var addToOneDayHint : TextView
+    private lateinit var nameTextEdit : EditText
+    private lateinit var descTextEdit : EditText
 
     private var curFlagState : Boolean = false
 
@@ -51,6 +57,7 @@ class EditTaskActivity : AppCompatActivity() {
         }
 
         task = intent.getSerializableExtra(Constants.TASK) as Task
+        originTask = task.copy()
         projectName = intent.getStringExtra(Constants.PROJECT_NAME).toString()
 
         init()
@@ -60,8 +67,13 @@ class EditTaskActivity : AppCompatActivity() {
         initObserve()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
+        task.name = nameTextEdit.text.toString()
+        task.description = descTextEdit.text.toString()
+        if (originTask != task) {
+            taskViewModel.updateTask(task)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -77,16 +89,27 @@ class EditTaskActivity : AppCompatActivity() {
     private fun init() {
         val projectNameTxt : TextView = findViewById(R.id.edit_task_projectName)
         val nameText : MaterialTextView = findViewById(R.id.task_name_text_view)
+        nameTextEdit = findViewById(R.id.task_name_text_view_edit)
+        descTextEdit = findViewById(R.id.edit_task_desc)
         val checkTaskBtn : ImageButton = findViewById(R.id.check_task_button)
         val setTaskStartBtn : ImageButton = findViewById(R.id.set_task_important)
         val createTimeTxt : TextView = findViewById(R.id.edit_task_createTime)
         addToOneDayIcon = findViewById(R.id.addToOneDayIcon)
         addToOneDayHint = findViewById(R.id.addToOneDayHint)
 
+        nameText.visibility = View.GONE
+        nameTextEdit.visibility = View.VISIBLE
+
+        val taskItem = TaskItem(nameText, checkTaskBtn, setTaskStartBtn, task)
+        taskItem.nameTextEdit = nameTextEdit
+        taskItem.initItem()
+        taskItem.initClickListener(taskViewModel)
+
         projectNameTxt.text = projectName
         createTimeTxt.text = "创建于" + task.createTime.toStringDesc()
-        if (task.state == TaskState.DOING) {
-            nameText.text = task.name
+        descTextEdit.setText(task.description)
+      /*  if (task.state == TaskState.DOING) {
+            nameTextEdit.setText(task.name)
             checkTaskBtn.setImageResource(R.drawable.ic_select)
         }else {
             val spannableString = SpannableString(task.name)
@@ -96,12 +119,12 @@ class EditTaskActivity : AppCompatActivity() {
                 spannableString.length,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
-            nameText.text = spannableString  /** 划线的效果 **/
+            nameTextEdit.setText(spannableString)  *//** 划线的效果 **//*
             checkTaskBtn.setImageResource(R.drawable.ic_select_check)
         }
         if(FlagHelper.containsFlag(task.flag, Task.IS_START)) {
             setTaskStartBtn.setImageResource(R.drawable.ic_shoucang_check)
-        }
+        }*/
 
         curFlagState = FlagHelper.containsFlag(task.flag, Task.IN_ONE_DAY)
         setOneDayStyle(curFlagState)
@@ -140,6 +163,8 @@ class EditTaskActivity : AppCompatActivity() {
             taskViewModel.setToOneDay(task.id, task.flag, curFlagState)
             setOneDayStyle(curFlagState)
         }
+
+
     }
 
     private fun initObserve() {

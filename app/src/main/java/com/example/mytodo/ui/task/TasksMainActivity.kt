@@ -195,10 +195,9 @@ class TasksMainActivity : AppCompatActivity() {
                 "更新异常".showToast()
             }
         }
-
         taskViewModel.startTaskLiveData.observe(this) { result ->
             if (result.getOrNull() != null) {
-                refreshList("set start observe")   // 刷新界面
+//                refreshList("set start observe")   // 刷新界面
             } else {
                 "更新异常".showToast()
             }

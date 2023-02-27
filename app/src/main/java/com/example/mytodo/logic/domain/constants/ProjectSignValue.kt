@@ -18,4 +18,11 @@ class ProjectSignValue {
     var assignedNum = 0
 
     var taskNum = 0
+
+    override fun toString() = "ProjectSignValue(introNum=$introNum, " +
+            "zaHuoNum=$zaHuoNum, oneDayNum=$oneDayNum, " +
+            "startNum=$startNum, planNum=$planNum, " +
+            "assignedNum=$assignedNum, taskNum=$taskNum)"
+
+
 }

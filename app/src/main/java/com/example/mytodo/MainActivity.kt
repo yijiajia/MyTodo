@@ -10,12 +10,15 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.ui.project.CustomProjectAdapter
 import com.example.mytodo.ui.project.DefaultProjectAdapter
 import com.example.mytodo.logic.domain.constants.ProjectSign
 import com.example.mytodo.logic.mapper.ProjectVo
 import com.example.mytodo.logic.showToast
+import com.example.mytodo.logic.work.InitWorker
 import com.example.mytodo.ui.project.AddProjectDiaLogFragment
 import com.example.mytodo.ui.project.ProjectViewModel
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -76,6 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         delLiveDataObserve()
 
+        initWork()
     }
 
     override fun onStart() {
@@ -139,8 +143,17 @@ class MainActivity : AppCompatActivity() {
         viewModel.searchLiveData.observe(this) { result ->
             Log.d(Constants.MAIN_PAGE_TAG,"default project num has update : result=$result")
             if (result != null) {
-                val project = viewModel.defaultProjectList.find { projectVo -> ProjectSign.START == projectVo.sign  }
-                project?.num = result.startNum
+                viewModel.defaultProjectList.forEach{
+                    when(it.sign) {
+                        ProjectSign.ONE_DAY -> it.num = result.oneDayNum
+                        ProjectSign.START -> it.num = result.startNum
+                        else -> true
+                    }
+                }
+             /*   val taskProject = viewModel.defaultProjectList.find { projectVo -> ProjectSign.START == projectVo.sign  }
+                taskProject?.num = result.startNum
+                val oneDayProject = viewModel.defaultProjectList.find { projectVo -> ProjectSign.ONE_DAY == projectVo.sign  }
+                oneDayProject?.num = result.oneDayNum*/
                 defaultAdapter.notifyDataSetChanged()
             }
         }
@@ -165,6 +178,11 @@ class MainActivity : AppCompatActivity() {
             Log.d(Constants.MAIN_PAGE_TAG,"del project $id is suc, flush page")
             viewModel.searchProjectList()   // 更新
         }
+    }
+
+    private fun initWork() {
+        val request = OneTimeWorkRequest.Builder(InitWorker::class.java).build()
+        WorkManager.getInstance(this).enqueue(request)
     }
 
 }

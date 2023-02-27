@@ -1,9 +1,11 @@
-package com.example.mytodo.logic
+package com.example.mytodo.logic.repository
 
 import androidx.lifecycle.liveData
 import com.example.mytodo.MyToDoApplication
+import com.example.mytodo.logic.Cmd
 import com.example.mytodo.logic.dao.AppDatabase
 import com.example.mytodo.logic.dao.SearchArg
+import com.example.mytodo.logic.domain.constants.ProjectSignValue
 import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.logic.domain.entity.Task
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +19,7 @@ object Repository {
     fun getProjectList() = projectDao.getAllList()
 
     fun saveProject(project: Project) = fire(Dispatchers.IO) {
-        Result.success(projectDao.addProject(project))
+        Result.success(projectDao.insertProject(project))
     }
 
     fun deleteProject(project: Project) = projectDao.deleteProject(project)
@@ -33,14 +35,25 @@ object Repository {
         var tasksList: List<Task> = when(searchArg.cmd) {
             Cmd.SEARCH_ALL -> tasksDao.searchAllTasks()
             Cmd.SEARCH_BY_PID ->  tasksDao.searchTasksByProjectId(searchArg.value as Long)
-            Cmd.SEARCH_IMPORTANT -> tasksDao.searchImportantTasks()
+            Cmd.SEARCH_IMPORTANT -> searchImportantTasks()
+            Cmd.SEARCH_ONE_DAY -> tasksDao.searchTasksByFlag(Task.IN_ONE_DAY)
             else -> throw IllegalArgumentException("arg is error")
         }
         tasksList = tasksList.sortedBy { task -> task.state }
         Result.success(tasksList)
     }
 
-    fun searchImportantTasks() = tasksDao.searchImportantTasks()
+    fun searchImportantTasks() = tasksDao.searchTasksByFlag(Task.IS_START)
+
+    fun searchTaskCount() : ProjectSignValue {
+        val startCount = tasksDao.searchCountByFlag(Task.IS_START)
+        val oneDayCount = tasksDao.searchCountByFlag(Task.IN_ONE_DAY)
+
+        return ProjectSignValue().apply {
+            startNum = startCount
+            oneDayNum = oneDayCount
+        }
+    }
 
 
     fun insertTask(task: Task) = fire(Dispatchers.IO) {
@@ -61,8 +74,8 @@ object Repository {
         Result.success(tasksDao.updateTaskState(id, state))
     }
 
-    fun updateTaskStart(id: Long, isStart: Boolean) = fire(Dispatchers.IO) {
-        Result.success(tasksDao.updateTaskStart(id, isStart))
+    fun updateTaskFlag(id: Long, flag: Int) = fire(Dispatchers.IO) {
+        Result.success(tasksDao.updateFlag(id, flag))
     }
 
 

@@ -31,7 +31,7 @@ abstract class AppDatabase : RoomDatabase(){
          */
         private val MIGRATION_1_2 = object : Migration(1,2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("alter table task add isStart INTEGER not null default 0")
+                database.execSQL("alter table task add createTime INTEGER not null default -28800")
             }
         }
 

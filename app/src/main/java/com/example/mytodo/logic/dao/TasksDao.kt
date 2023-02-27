@@ -3,6 +3,7 @@ package com.example.mytodo.logic.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.mytodo.logic.domain.entity.Task
 
 @Dao
@@ -17,8 +18,8 @@ interface TasksDao {
     @Query("select * from task")
     fun searchAllTasks() : List<Task>
 
-    @Query("select * from task where isStart = 1 and state = 0")
-    fun searchImportantTasks() : List<Task>
+    @Query("select * from task where flag & :flag = :flag and state = 0")
+    fun searchTasksByFlag(flag: Int) : List<Task>
 
     @Query("delete from task where id = :id")
     fun deleteTaskById(id : Long)
@@ -29,8 +30,12 @@ interface TasksDao {
     @Query("update task set state = :state where id = :id")
     fun updateTaskState(id: Long, state : Int)
 
-    @Query("update task set isStart = :isStart where id = :id")
-    fun updateTaskStart(id: Long, isStart: Boolean)
+    @Query("update task set flag = :flag where id = :id")
+    fun updateFlag(id: Long, flag: Int)
 
+    @Update
+    fun updateTask(task: Task)
 
+    @Query("select count(id) from task where flag&:flag = :flag and state = 0")
+    fun searchCountByFlag(flag: Int) : Int
 }

@@ -3,6 +3,7 @@ package com.example.mytodo.logic.domain.entity
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.example.mytodo.logic.toSH
 import java.io.Serializable
 import java.time.LocalDateTime
 
@@ -12,15 +13,15 @@ data class Task(
     var description : String?,
     var state: Int,
     var projectId : Long,
-    var isStart : Boolean,
-//    var createTime : LocalDateTime?
+    var flag : Int,
+    var createTime : LocalDateTime
 ) : Serializable {
     @Ignore
-    constructor() : this("", "", 0, 0, false)
+    constructor() : this("", "", 0, 0, 0, LocalDateTime.now().toSH())
     @Ignore
     constructor(  name : String,
                   state: Int,
-                  projectId : Long) : this(name, "", state, projectId, false)
+                  projectId : Long) : this(name, "", state, projectId, 0, LocalDateTime.now().toSH())
 
 
     @PrimaryKey(autoGenerate = true)
@@ -31,9 +32,9 @@ data class Task(
      * Flag 常量
      */
     companion object {
+        /** 设为重要的 **/
         const val IS_START = 1
-        const val IS_ONE_DAY = 2
-
-
+        /** 设为我的一天 **/
+        const val IN_ONE_DAY = 2
     }
 }

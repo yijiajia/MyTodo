@@ -18,6 +18,7 @@ import com.example.mytodo.logic.TaskClickListener
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Task
 import com.example.mytodo.logic.domain.constants.TaskState
+import com.example.mytodo.logic.utils.FlagHelper
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 
@@ -43,9 +44,9 @@ class TasksAdapter(val viewModel: TasksViewModel)
         viewHolder.animationView.setAnimation("98350-fireworks.json")
 //        viewHolder.animationView.repeatCount = 1
         viewHolder.animationView.speed = 1.5f
-        viewHolder.animationView.addLottieOnCompositionLoadedListener { composition ->
+     /*   viewHolder.animationView.addLottieOnCompositionLoadedListener { composition ->
             Log.d(Constants.TASK_PAGE_TAG,"load animation is suc")
-        }
+        }*/
         return viewHolder
     }
 
@@ -65,7 +66,8 @@ class TasksAdapter(val viewModel: TasksViewModel)
             holder.nameText.text = spannableString  /** 划线的效果 **/
             holder.checkTaskBtn.setImageResource(R.drawable.ic_select_check)
         }
-        if(task.isStart) {
+        var curStartState = FlagHelper.containsFlag(task.flag, Task.IS_START)
+        if(curStartState) {
             holder.setTaskStartBtn.setImageResource(R.drawable.ic_shoucang_check)
         }
 
@@ -86,8 +88,8 @@ class TasksAdapter(val viewModel: TasksViewModel)
         }
 
         holder.setTaskStartBtn.setOnClickListener {
-            val isStart = !task.isStart
-            viewModel.setStart(task.id, isStart)
+            val isStart = !curStartState
+            viewModel.setStart(task.id, task.flag ,isStart)
             holder.setTaskStartBtn.setImageResource(R.drawable.ic_shoucang_check)
             Log.d(Constants.TASK_PAGE_TAG,"update task start id= ${task.id} isStart for $isStart")
         }

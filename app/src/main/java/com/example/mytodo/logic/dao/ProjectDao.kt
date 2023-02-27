@@ -10,7 +10,7 @@ import com.example.mytodo.logic.domain.entity.Project
 interface ProjectDao {
 
     @Insert
-    fun addProject(project: Project) : Long
+    fun insertProject(project: Project) : Long
 
     @Query("select * from project")
     fun getAllList() : List<Project>

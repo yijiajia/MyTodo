@@ -3,7 +3,7 @@ package com.example.mytodo.ui.project
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.mytodo.R
-import com.example.mytodo.logic.Repository
+import com.example.mytodo.logic.repository.Repository
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.constants.ProjectSign
 import com.example.mytodo.logic.domain.constants.ProjectSignValue
@@ -22,12 +22,9 @@ class ProjectViewModel : ViewModel() {
     )
     val searchLiveData = MutableLiveData<ProjectSignValue>()
     fun searchDefaultProjectNum() {
-        val projectSignValue = ProjectSignValue()
         CoroutineScope(Dispatchers.IO).launch {
-            val importantTasks  = Repository.searchImportantTasks()
-            val startNum = importantTasks.size
-            Log.d(Constants.MAIN_PAGE_TAG,"searchDefaultProjectNum,startNum=$startNum")
-            projectSignValue.startNum = startNum
+            val projectSignValue = Repository.searchTaskCount()
+            Log.d(Constants.MAIN_PAGE_TAG,"searchDefaultProjectNum,projectSignValue=$projectSignValue")
             searchLiveData.postValue(projectSignValue)
         }
     }

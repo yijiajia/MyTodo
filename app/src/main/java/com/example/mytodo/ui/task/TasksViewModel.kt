@@ -4,10 +4,11 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.example.mytodo.logic.Repository
+import com.example.mytodo.logic.repository.Repository
 import com.example.mytodo.logic.dao.SearchArg
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Task
+import com.example.mytodo.logic.utils.FlagHelper
 
 class TasksViewModel : ViewModel() {
 
@@ -18,6 +19,7 @@ class TasksViewModel : ViewModel() {
     }
     val tasksList = ArrayList<Task>()
     val tasksLiveData = Transformations.switchMap(searchLiveData) { query ->
+        Log.d(Constants.TASK_PAGE_TAG,"switchMap query=${query.cmd}")
         Repository.searchTasks(query)
     }
 
@@ -45,14 +47,18 @@ class TasksViewModel : ViewModel() {
 
     // 设为重要的
     private val setStartLiveData = MutableLiveData<Task>()
-    fun setStart(id: Long,isStart: Boolean) {
+    fun setStart(id: Long, flag: Int, isStart: Boolean) {
         setStartLiveData.value = Task().apply {
-            this.isStart = isStart
+            if (isStart) {
+                this.flag = FlagHelper.addFlag(flag, Task.IS_START)
+            }else {
+                this.flag = FlagHelper.removeFlag(flag,Task.IS_START)
+            }
             this.id = id
         }
     }
     val startTaskLiveData = Transformations.switchMap(setStartLiveData) { task ->
-        Repository.updateTaskStart(task.id,task.isStart)
+        Repository.updateTaskFlag(task.id,task.flag)
     }
 
     // 删除任务
@@ -65,5 +71,20 @@ class TasksViewModel : ViewModel() {
         Repository.deleteTask(it)
     }
 
+    // 设为我的一天
+    private val setOneDayLiveData = MutableLiveData<Task>()
+    fun setToOneDay(id: Long, flag: Int, inOneDay : Boolean) {
+        setOneDayLiveData.value = Task().apply {
+            if (inOneDay) {
+                this.flag = FlagHelper.addFlag(flag, Task.IN_ONE_DAY)
+            }else {
+                this.flag = FlagHelper.removeFlag(flag, Task.IN_ONE_DAY)
+            }
+            this.id = id
+        }
+    }
+    val oneDayLiveData = Transformations.switchMap(setOneDayLiveData) { task ->
+        Repository.updateTaskFlag(task.id,task.flag)
+    }
 
 }

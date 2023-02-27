@@ -106,7 +106,7 @@
             app:fabCradleMargin="8dp"
             app:fabCradleRoundedCornerRadius="32dp"
             app:menu="@menu/bottom_app_bar_menu"
-            app:navigationIcon="@drawable/circle" />
+            app:navigationIcon="@drawable/circle"/>
 
       <!--  <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"

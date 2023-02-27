@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "b9bb8e63376da014c2d2a191de8291e4",
+    "identityHash": "6f98d6bd2504f794cf089d57a7cbb361",
     "entities": [
       {
         "tableName": "Project",
@@ -44,7 +44,7 @@
       },
       {
         "tableName": "Task",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `description` TEXT, `state` INTEGER NOT NULL, `projectId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `isStart` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `description` TEXT, `state` INTEGER NOT NULL, `projectId` INTEGER NOT NULL, `flag` INTEGER NOT NULL, `createTime` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -71,14 +71,20 @@
             "notNull": true
           },
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "flag",
+            "columnName": "flag",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "isStart",
-            "columnName": "isStart",
+            "fieldPath": "createTime",
+            "columnName": "createTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -96,7 +102,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b9bb8e63376da014c2d2a191de8291e4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6f98d6bd2504f794cf089d57a7cbb361')"
     ]
   }
 }

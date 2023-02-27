@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/addToOneDayItem"
+        android:icon="@drawable/ic_sun"
+        app:showAsAction="always"
+        android:title="添加到我的一天" />
+
+    <item android:id="@+id/addEndTimeItem"
+        android:icon="@drawable/ic_calendar"
+        app:showAsAction="always"
+        android:title="添加截止日期" />
+
+    <item android:id="@+id/selectAllItem"
+        android:title="全选"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/setTaskStartItem"
+        android:title="标记为重要"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/moveProjectItem"
+        android:title="移动"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/delTaskItem"
+        android:title="删除任务"
+        app:showAsAction="never" />
+
+</menu>

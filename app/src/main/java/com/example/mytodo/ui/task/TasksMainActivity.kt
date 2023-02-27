@@ -69,7 +69,7 @@ class TasksMainActivity : AppCompatActivity() {
         viewModelOwner = this
 
         Log.d(Constants.TASK_PAGE_TAG, "projectId = $projectId, projectName= $projectName")
-        refreshList()
+        refreshList("onCreate")
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)   // 显示home图标
@@ -81,10 +81,11 @@ class TasksMainActivity : AppCompatActivity() {
 
         initClickListener()
 
+        initObserve()
 
         // 下拉刷新
         swipeRefreshTask.setOnRefreshListener {
-            refreshList()
+            refreshList("refresh")
             swipeRefreshTask.isRefreshing = false   // 取消刷新状态
         }
 
@@ -98,7 +99,7 @@ class TasksMainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.d(Constants.TASK_PAGE_TAG,"on resume")
-        initObserve()
+        refreshList("onResume")
     }
 
     override fun onDestroy() {
@@ -181,7 +182,7 @@ class TasksMainActivity : AppCompatActivity() {
 
         taskViewModel.insertTaskLiveData.observe(this) { result ->
             if (result.getOrNull() != null) {
-                refreshList()   // 刷新界面
+                refreshList("insert observe")   // 刷新界面
             } else {
                 "添加异常".showToast()
             }
@@ -189,7 +190,7 @@ class TasksMainActivity : AppCompatActivity() {
 
         taskViewModel.updateTaskLiveDate.observe(this) { result ->
             if (result.getOrNull() != null) {
-                refreshList()   // 刷新界面
+                refreshList("update observe")   // 刷新界面
             } else {
                 "更新异常".showToast()
             }
@@ -197,7 +198,7 @@ class TasksMainActivity : AppCompatActivity() {
 
         taskViewModel.startTaskLiveData.observe(this) { result ->
             if (result.getOrNull() != null) {
-                refreshList()   // 刷新界面
+                refreshList("set start observe")   // 刷新界面
             } else {
                 "更新异常".showToast()
             }
@@ -206,7 +207,7 @@ class TasksMainActivity : AppCompatActivity() {
         taskViewModel.delTaskLiveData.observe(this) { result ->
             "删除完成".showToast()
             if (result.getOrNull() != null) {
-                refreshList()   // 刷新界面
+                refreshList("del observe")   // 刷新界面
             } else {
                 "更新异常".showToast()
             }
@@ -220,6 +221,15 @@ class TasksMainActivity : AppCompatActivity() {
                 TaskState.DOING,
                 projectId
             )
+            if (projectId == 0L) {
+                var flag = 0
+                when(projectSign) {
+                    ProjectSign.ONE_DAY -> flag = Task.IN_ONE_DAY
+                    ProjectSign.START -> flag = Task.IS_START
+                    else -> false
+                }
+                newTask.flag = flag
+            }
             editTaskName.text.clear()
             taskViewModel.insert(newTask)
 
@@ -234,12 +244,15 @@ class TasksMainActivity : AppCompatActivity() {
         }
     }
 
-    private fun refreshList() {
+    private fun refreshList(log: String) {
+        Log.d(Constants.TASK_PAGE_TAG, "source:$log")
         val searchArg = SearchArg(Cmd.SEARCH_BY_PID)
         searchArg.value = projectId
         if (projectId == 0L) {
             when (projectSign) {
-                ProjectSign.ONE_DAY -> {}
+                ProjectSign.ONE_DAY -> {
+                    searchArg.cmd = Cmd.SEARCH_ONE_DAY
+                }
                 ProjectSign.START -> {
                     // 查询start任务
                     searchArg.cmd = Cmd.SEARCH_IMPORTANT

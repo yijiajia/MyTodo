@@ -21,6 +21,11 @@ enum class Cmd {
      */
     SEARCH_PLAN,
 
+    /**
+     *  查询我的一天
+     */
+    SEARCH_ONE_DAY,
+
 
     /**
      * 兼容报错的

@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.mytodo"
-        minSdk 21
+        minSdk 26
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -44,6 +44,7 @@ android {
 }
 
 dependencies {
+    implementation "androidx.work:work-runtime:2.7.1"
     //Lottie动画
     implementation "com.airbnb.android:lottie:6.0.0"
     implementation "androidx.room:room-runtime:2.4.0"

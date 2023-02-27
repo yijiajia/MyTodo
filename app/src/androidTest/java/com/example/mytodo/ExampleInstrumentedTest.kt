@@ -5,15 +5,17 @@ import android.widget.Button
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.mytodo.logic.dao.AppDatabase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import com.example.mytodo.logic.domain.entity.Project
+import com.example.mytodo.logic.domain.entity.Task
+import com.example.mytodo.logic.toSH
+import com.example.mytodo.logic.toStringDesc
+import kotlinx.coroutines.*
 
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.junit.Assert.*
+import java.time.LocalDateTime
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -49,5 +51,14 @@ class ExampleInstrumentedTest {
             val projectList = projectDao.getAllList()
             Log.d("", "更新了数目；当前数目为：size=${projectList[0]?.num}")
         }
+    }
+
+    @Test
+    fun timeTest() {
+        runBlocking {
+            Log.d("test",LocalDateTime.now().toStringDesc())
+            Log.d("test",LocalDateTime.now().toSH().toString())
+        }
+
     }
 }

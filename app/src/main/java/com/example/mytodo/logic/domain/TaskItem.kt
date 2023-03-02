@@ -22,9 +22,10 @@ class TaskItem(private val nameText: MaterialTextView?,
 
     var nameTextEdit: EditText? = null
 
+    var curTaskName : String? = null
     
     fun initItem() {
-        initItemUI()
+        flushItemUI()
 //        Log.d(Constants.TASK_PAGE_TAG, "页面数据初始化成功;task=$task")
     }
 
@@ -41,7 +42,7 @@ class TaskItem(private val nameText: MaterialTextView?,
             }
             task.state = upState
             viewModel.updateTask(task)
-            initItemUI()
+            flushItemUI()
             Log.d(Constants.TASK_PAGE_TAG,"update task state id= ${task.id} state for $upState")
         }
         setTaskStartBtn.setOnClickListener {
@@ -52,24 +53,37 @@ class TaskItem(private val nameText: MaterialTextView?,
                 task.flag = FlagHelper.removeFlag(task.flag,Task.IS_START)
             }
             viewModel.setStart(task.id, task.flag)
-            initItemUI()
+            updateStartUI()
             Log.d(Constants.TASK_PAGE_TAG,"update task start id= ${task.id} isStart for $isStart")
         }
     }
 
-    fun initItemUI() {
-        val taskName = task.name
-        if (nameText?.visibility == View.VISIBLE) {
-            nameText.text = taskName
-        } else {
-            nameTextEdit?.setText(taskName)
+
+    fun flushItemUI() {
+        updateNameUI()
+        updateStartUI()
+    }
+
+    fun updateNameUI() {
+        /**
+         * 从task中获取到名字 或者从输入框获取到名字
+         */
+        if (curTaskName == null) {
+            curTaskName = task.name
+        }else {
+            curTaskName = if (nameText?.visibility == View.VISIBLE) {
+                nameText.text.toString()
+            } else {
+                nameTextEdit?.text.toString()
+            }
         }
+
         /**
          * checkTaskBtn
          */
         var resId = R.drawable.ic_select
         if (task.state == TaskState.DONE) {
-            val spannableString = SpannableString(task.name)
+            val spannableString = SpannableString(curTaskName)
             spannableString.setSpan(
                 StrikethroughSpan(),
                 0,
@@ -82,15 +96,22 @@ class TaskItem(private val nameText: MaterialTextView?,
                 nameTextEdit?.setText(spannableString) /** 划线的效果 **/
             }
             resId = R.drawable.ic_select_check
+        }else {
+            if (nameText?.visibility == View.VISIBLE) {
+                nameText.text = curTaskName
+            } else {
+                nameTextEdit?.setText(curTaskName)
+            }
         }
         checkTaskBtn.setImageResource(resId)
+    }
 
+    fun updateStartUI() {
         var startResId = R.drawable.ic_shoucang
         if (FlagHelper.containsFlag(task.flag, Task.IS_START)) {
-           startResId = R.drawable.ic_shoucang_check
+            startResId = R.drawable.ic_shoucang_check
         }
         setTaskStartBtn.setImageResource(startResId)
     }
-
 
 }

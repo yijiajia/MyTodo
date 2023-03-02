@@ -70,4 +70,15 @@ class ExampleInstrumentedTest {
             println(ans)
         }
     }
+
+    @Test
+    fun NullTest() {
+        runBlocking {
+            val list: List<String?> = listOf("apple",null)
+            for (item in list) {
+                item?.let { println(it) }
+            }
+
+        }
+    }
 }

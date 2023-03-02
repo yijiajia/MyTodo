@@ -39,6 +39,7 @@ data class Task(
                     || (id == other.id
                         && name == other.name
                         && flag == other.flag
+                        &&  state == other.state
                         && description == other.description)
         }
     }

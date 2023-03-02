@@ -193,7 +193,8 @@
             <EditText
                 android:id="@+id/edit_task_desc"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@null"/>
 
         </com.google.android.material.card.MaterialCardView>
 

@@ -35,6 +35,39 @@ class TasksAdapter(val viewModel: TasksViewModel)
         val setTaskStartBtn : ImageButton = view.findViewById(R.id.set_task_important)
         val cardView : MaterialCardView = view.findViewById(R.id.task_card)
         val animationView: LottieAnimationView = view.findViewById(R.id.suc_animation)
+
+        fun bind(task: Task) {
+            val taskItem = TaskItem(nameText, checkTaskBtn, setTaskStartBtn, task)
+            taskItem.initItem()
+            taskItem.initClickListener(viewModel)
+
+            /*val curStartState = FlagHelper.containsFlag(task.flag, Task.IS_START)
+            holder.checkTaskBtn.setOnClickListener {
+                val upState = if (task.state == TaskState.DONE) {
+                    taskClickListener.onTaskDoingClick(task)
+                    TaskState.DOING
+                } else  {
+                    holder.animationView.playAnimation()
+                    Log.d(Constants.TASK_PAGE_TAG,"播放动画")
+                    taskClickListener.onTaskDoneClick(task)
+                    TaskState.DONE
+                }
+                val toastName = if (upState == TaskState.DOING) "正在做" else  "做完"
+                viewModel.updateState(task.id, upState)
+                Log.d(Constants.TASK_PAGE_TAG,"update task state id= ${task.id} state for $upState；toastName=$toastName")
+            }
+
+            holder.setTaskStartBtn.setOnClickListener {
+                val isStart = !curStartState
+                viewModel.setStart(task.id, task.flag ,isStart)
+                holder.setTaskStartBtn.setImageResource(R.drawable.ic_shoucang_check)
+                Log.d(Constants.TASK_PAGE_TAG,"update task start id= ${task.id} isStart for $isStart")
+            }*/
+            Log.d(Constants.TASK_PAGE_TAG,"adapter holder bind view")
+            cardView.setOnClickListener {
+                taskClickListener.onTaskClick(task, cardView)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -53,37 +86,7 @@ class TasksAdapter(val viewModel: TasksViewModel)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val task = getItem(position)
-        val taskItem = TaskItem(holder.nameText, holder.checkTaskBtn, holder.setTaskStartBtn, task)
-        taskItem.initItem()
-        taskItem.initClickListener(viewModel)
-
-        /*val curStartState = FlagHelper.containsFlag(task.flag, Task.IS_START)
-        holder.checkTaskBtn.setOnClickListener {
-            val upState = if (task.state == TaskState.DONE) {
-                taskClickListener.onTaskDoingClick(task)
-                TaskState.DOING
-            } else  {
-                holder.animationView.playAnimation()
-                Log.d(Constants.TASK_PAGE_TAG,"播放动画")
-                taskClickListener.onTaskDoneClick(task)
-                TaskState.DONE
-            }
-            val toastName = if (upState == TaskState.DOING) "正在做" else  "做完"
-            viewModel.updateState(task.id, upState)
-            Log.d(Constants.TASK_PAGE_TAG,"update task state id= ${task.id} state for $upState；toastName=$toastName")
-        }
-
-        holder.setTaskStartBtn.setOnClickListener {
-            val isStart = !curStartState
-            viewModel.setStart(task.id, task.flag ,isStart)
-            holder.setTaskStartBtn.setImageResource(R.drawable.ic_shoucang_check)
-            Log.d(Constants.TASK_PAGE_TAG,"update task start id= ${task.id} isStart for $isStart")
-        }*/
-
-        holder.cardView.setOnClickListener {
-            taskClickListener.onTaskClick(task, holder.cardView)
-        }
+        getItem(position)?.let { holder.bind(it) }
     }
 
 

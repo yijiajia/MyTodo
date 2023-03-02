@@ -32,6 +32,7 @@ import com.example.mytodo.logic.showToast
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.stream.Collectors
 
 class TasksMainActivity : AppCompatActivity() {
 
@@ -46,6 +47,8 @@ class TasksMainActivity : AppCompatActivity() {
     private lateinit var adapter: TasksAdapter
     private lateinit var addTaskBtn: ImageButton
     private lateinit var taskRecyclerView: RecyclerView
+
+    private var previousList : List<Task>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +125,6 @@ class TasksMainActivity : AppCompatActivity() {
     }
 
     private fun initClickListener() {
-
         adapter.taskClickListener = object : TaskClickListener {
             override fun onTaskClick(task: Task, card: MaterialCardView) {
                 Log.d(Constants.MAIN_PAGE_TAG, "click item card; id=$taskId")
@@ -172,6 +174,21 @@ class TasksMainActivity : AppCompatActivity() {
             if (taskList != null) {
                 Log.d(Constants.TASK_PAGE_TAG, "任务刷新成功，任务列表为：$taskList")
                 taskRecyclerView.visibility = View.VISIBLE
+                var changePosition: Int? = null
+                previousList?.let {
+                    if (it.size == taskList.size) {
+                        for (i in taskList.indices) {
+                            if (taskList[i] != it[i]) {
+                                changePosition = i
+                                break
+                            }
+                        }
+                    }
+                    changePosition?.let {
+                        adapter.notifyItemChanged(changePosition!!)
+                    }
+                }
+                previousList = taskList
                 adapter.submitList(taskList)
             } else {
                 "未能查询到任务".showToast()

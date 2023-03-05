@@ -11,7 +11,7 @@ import com.example.mytodo.logic.convert.LocalDateTimeConverter
 import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.logic.domain.entity.Task
 
-@Database(version = 2, entities = [Project::class, Task::class])
+@Database(version = 3, entities = [Project::class, Task::class])
 @TypeConverters(LocalDateTimeConverter::class)
 abstract class AppDatabase : RoomDatabase(){
 
@@ -35,6 +35,14 @@ abstract class AppDatabase : RoomDatabase(){
             }
         }
 
+        private val MIGRATION_2_3 = object : Migration(2,3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("alter table task add column remindTime INTEGER")
+                database.execSQL("alter table task add column  endTime INTEGER")
+                database.execSQL("alter table task add column isRepeat INTEGER NOT NULL DEFAULT(0)")
+            }
+        }
+
         private var instance : AppDatabase? = null
 
         @Synchronized
@@ -44,7 +52,7 @@ abstract class AppDatabase : RoomDatabase(){
             }
             return Room.databaseBuilder(context.applicationContext,
                 AppDatabase::class.java,"MyTodo")
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build().apply {
                     instance = this
                 }

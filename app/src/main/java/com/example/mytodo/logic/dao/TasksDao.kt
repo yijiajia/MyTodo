@@ -38,4 +38,7 @@ interface TasksDao {
 
     @Query("select count(id) from task where flag&:flag = :flag and state = 0")
     fun searchCountByFlag(flag: Int) : Int
+
+
+
 }

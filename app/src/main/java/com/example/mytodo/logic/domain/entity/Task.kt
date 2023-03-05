@@ -5,6 +5,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.mytodo.logic.toSH
 import java.io.Serializable
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
@@ -15,14 +16,19 @@ data class Task(
     var state: Int,
     var projectId : Long,
     var flag : Int,
-    var createTime : LocalDateTime
+    var createTime : LocalDateTime,
+    var remindTime: LocalDateTime?,
+    var endTime: LocalDate?,
+    var isRepeat: Boolean
 ) : Serializable {
     @Ignore
-    constructor() : this("", "", 0, 0, 0, LocalDateTime.now().toSH())
+    constructor()
+            : this("", "", 0, 0, 0, LocalDateTime.now().toSH(), null, null, false)
     @Ignore
     constructor(  name : String,
                   state: Int,
-                  projectId : Long) : this(name, "", state, projectId, 0, LocalDateTime.now().toSH())
+                  projectId : Long)
+            : this(name, "", state, projectId, 0, LocalDateTime.now().toSH(), null, null, false)
 
 
     @PrimaryKey(autoGenerate = true)
@@ -40,7 +46,10 @@ data class Task(
                         && name == other.name
                         && flag == other.flag
                         &&  state == other.state
-                        && description == other.description)
+                        && description == other.description
+                        && remindTime == other.remindTime
+                        && endTime == other.endTime
+                        && isRepeat == other.isRepeat)
         }
     }
 

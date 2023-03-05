@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:startDestination="@id/datePickerFragment">
+
+    <fragment
+        android:id="@+id/datePickerFragment"
+        android:name="com.example.mytodo.ui.picker.DatePickerFragment"
+        android:label="日期选择器"
+        tools:layout="@layout/fragment_datepicker">
+        <action android:id="@+id/switchTime"
+            app:destination="@id/timePickerFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/timePickerFragment"
+        android:name="com.example.mytodo.ui.picker.TimePickerFragment"
+        android:label="时间选择器"
+        tools:layout="@layout/fragment_timepicker">
+        <action android:id="@+id/switchCalendar"
+            app:destination="@id/datePickerFragment"/>
+    </fragment>
+
+</navigation>

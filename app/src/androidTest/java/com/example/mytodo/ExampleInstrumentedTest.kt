@@ -15,7 +15,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import org.junit.Assert.*
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -80,5 +82,12 @@ class ExampleInstrumentedTest {
             }
 
         }
+    }
+
+    @Test
+    fun DateTimeConverterTest() {
+        println(LocalDate.now().toEpochDay())
+        println(LocalDate.ofEpochDay(LocalDate.now().toEpochDay()))
+        println(LocalDateTime.ofEpochSecond(0,0, ZoneOffset.ofHours(8)))
     }
 }

@@ -1,7 +1,5 @@
 package com.example.mytodo.logic.convert
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -10,7 +8,12 @@ import java.time.ZoneOffset
 class LocalDateTimeConverter {
 
     @TypeConverter
-    fun dateTimeToLong(time : LocalDateTime) = time.toEpochSecond(ZoneOffset.ofHours(8))
+    fun dateTimeToLong(time : LocalDateTime?): Long{
+        if (time == null) {
+            return 0
+        }
+        return time.toEpochSecond(ZoneOffset.ofHours(8))
+    }
 
 
     @TypeConverter
@@ -18,7 +21,12 @@ class LocalDateTimeConverter {
 
 
     @TypeConverter
-    fun localDateToLong(time : LocalDate) = time.toEpochDay()
+    fun localDateToLong(time : LocalDate?) : Long {
+        if (time == null) {
+            return 0
+        }
+        return time.toEpochDay()
+    }
 
 
     @TypeConverter

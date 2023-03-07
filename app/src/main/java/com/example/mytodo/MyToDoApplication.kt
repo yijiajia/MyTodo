@@ -14,5 +14,7 @@ class MyToDoApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+
+//        initWorker()
     }
 }

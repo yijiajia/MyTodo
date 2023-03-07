@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.mytodo.logic.domain.entity.Task
+import java.time.LocalDateTime
 
 @Dao
 interface TasksDao {
@@ -39,6 +40,10 @@ interface TasksDao {
     @Query("select count(id) from task where flag&:flag = :flag and state = 0")
     fun searchCountByFlag(flag: Int) : Int
 
+    @Query("select * from task where date(datetime(remindTime/1000, 'unixepoch')) = date('now')")
+    fun searchTasksByNeedRemind() : List<Task>
 
+    @Query("select * from task where remindTime BETWEEN :beginTime and :endTime order by remindTime")
+    fun searchTasksByRemindToday(beginTime: LocalDateTime, endTime: LocalDateTime): List<Task>
 
 }

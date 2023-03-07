@@ -3,7 +3,7 @@ package com.example.mytodo.logic.domain.entity
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.example.mytodo.logic.toSH
+import com.example.mytodo.logic.toDefaultTime
 import java.io.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -23,12 +23,16 @@ data class Task(
 ) : Serializable {
     @Ignore
     constructor()
-            : this("", "", 0, 0, 0, LocalDateTime.now().toSH(), null, null, false)
+            : this("", "", 0, 0, 0,
+                    LocalDateTime.now(),
+                    LocalDateTime.now().toDefaultTime(), null, false)
     @Ignore
     constructor(  name : String,
                   state: Int,
                   projectId : Long)
-            : this(name, "", state, projectId, 0, LocalDateTime.now().toSH(), null, null, false)
+            : this(name, "", state, projectId, 0,
+                    LocalDateTime.now(),
+                    LocalDateTime.now().toDefaultTime(), null, false)
 
 
     @PrimaryKey(autoGenerate = true)

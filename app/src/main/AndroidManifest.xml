@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+
     <application
         android:name=".MyToDoApplication"
         android:allowBackup="true"
@@ -13,6 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyToDo"
         tools:targetApi="32">
+        <receiver android:name=".logic.receiver.RemindAlarmReceiver"
+            android:exported="true"
+            android:enabled="true"
+            android:process=":remote">
+        </receiver>
         <activity
             android:name=".ui.MainTestActivity"
             android:exported="true">

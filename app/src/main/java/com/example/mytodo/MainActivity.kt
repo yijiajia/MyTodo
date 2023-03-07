@@ -10,15 +10,12 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.ui.project.CustomProjectAdapter
 import com.example.mytodo.ui.project.DefaultProjectAdapter
 import com.example.mytodo.logic.domain.constants.ProjectSign
 import com.example.mytodo.logic.mapper.ProjectVo
 import com.example.mytodo.logic.showToast
-import com.example.mytodo.logic.work.InitWorker
 import com.example.mytodo.ui.project.AddProjectDiaLogFragment
 import com.example.mytodo.ui.project.ProjectViewModel
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -79,7 +76,8 @@ class MainActivity : AppCompatActivity() {
 
         delLiveDataObserve()
 
-        initWork()
+//        initWorker()
+
     }
 
     override fun onStart() {
@@ -180,9 +178,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initWork() {
-        val request = OneTimeWorkRequest.Builder(InitWorker::class.java).build()
-        WorkManager.getInstance(this).enqueue(request)
-    }
-
+   /* private fun initWorker() {
+        val initRequest = OneTimeWorkRequest.Builder(InitWorker::class.java).build()
+        // 一天执行一次
+        val remindRequest = PeriodicWorkRequest.Builder(RemindWorker::class.java, 15, TimeUnit.MINUTES)
+            .addTag(RemindWorker.Tag).build()
+        WorkManager.getInstance(this)
+            .cancelAllWorkByTag(RemindWorker.Tag)
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                RemindWorker.Tag,
+                ExistingPeriodicWorkPolicy.KEEP,
+                remindRequest
+            )
+    }*/
 }

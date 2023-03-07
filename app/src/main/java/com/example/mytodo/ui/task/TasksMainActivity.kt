@@ -32,7 +32,6 @@ import com.example.mytodo.logic.showToast
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.stream.Collectors
 
 class TasksMainActivity : AppCompatActivity() {
 
@@ -201,6 +200,7 @@ class TasksMainActivity : AppCompatActivity() {
             if (result.getOrNull() != null) {
                 refreshList("insert observe")   // 刷新界面
             } else {
+                result.exceptionOrNull()?.printStackTrace()
                 "添加异常".showToast()
             }
         }

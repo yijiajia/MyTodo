@@ -114,8 +114,7 @@
                         android:id="@+id/remindTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="测试"
-                        android:textColor="@color/light_blue" />
+                        android:text="测试"/>
 
                     <TextView
                         android:id="@+id/remindDate"

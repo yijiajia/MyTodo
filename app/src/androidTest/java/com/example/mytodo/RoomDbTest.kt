@@ -1,21 +1,20 @@
 package com.example.mytodo
 
 import android.util.Log
-import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.mytodo.logic.dao.AppDatabase
 import com.example.mytodo.logic.dao.TasksDao
 import com.example.mytodo.logic.domain.entity.Task
-import com.example.mytodo.logic.repository.Repository
-import com.example.mytodo.logic.toSH
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 @RunWith(AndroidJUnit4::class)
 class RoomDbTest {
@@ -69,6 +68,23 @@ class RoomDbTest {
         runBlocking {
             val taskList = taskDao.searchTasksByFlag(Task.IN_ONE_DAY)
             Log.d("","taskList=$taskList")
+        }
+    }
+
+    @Test
+    fun searchTasksByRemind() {
+        runBlocking {
+            var taskList = taskDao.searchTasksByNeedRemind()
+            Log.d("","searchTasksByNeedRemind-taskList=$taskList")
+            val beginTime = LocalDateTime.of(LocalDateTime.now().toLocalDate(), LocalTime.MIN)
+            val endTime = LocalDateTime.of(LocalDateTime.now().toLocalDate(), LocalTime.MAX)
+            taskList = taskDao.searchTasksByRemindToday(beginTime, endTime)
+            Log.d("","searchTasksByRemindToday-taskList=$taskList")
+
+            val now = LocalDate.now()
+            val endTime2: LocalDateTime =
+                LocalDateTime.of(now.year, now.month, now.dayOfMonth, 23, 59, 59)
+            Log.d("","endTime=$endTime, endTime2=$endTime2 , equals=${endTime.equals(endTime2)}")
         }
     }
 

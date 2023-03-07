@@ -12,6 +12,9 @@ class Constants {
         const val PROJECT_SIGN = "projectSign"
 
         const val TASK = "task"
+        const val TASK_BYTE = "taskByte"
+
+        const val ALARM_ID = "alarmId"
     }
 
 }

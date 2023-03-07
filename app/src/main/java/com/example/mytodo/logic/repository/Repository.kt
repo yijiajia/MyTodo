@@ -5,6 +5,7 @@ import com.example.mytodo.MyToDoApplication
 import com.example.mytodo.logic.Cmd
 import com.example.mytodo.logic.dao.AppDatabase
 import com.example.mytodo.logic.dao.SearchArg
+import com.example.mytodo.logic.dao.SharedPreDao
 import com.example.mytodo.logic.domain.constants.ProjectSignValue
 import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.logic.domain.entity.Task
@@ -82,6 +83,12 @@ object Repository {
         Result.success(tasksDao.updateFlag(id, flag))
     }
 
+    fun getInteger4Alarm(key: String, defaultValue: Int) = SharedPreDao.getInteger4Alarm(key, defaultValue)
+
+    fun setInteger4Alarm(key: String, value: Int) = SharedPreDao.setInteger4Alarm(key, value)
+
+    fun getInteger4Broad(taskId: String) = SharedPreDao.getInteger4Broad(taskId)
+    fun setInteger4Broad(taskId: String, requestCode: Int) = SharedPreDao.setInteger4Broad(taskId,requestCode)
 
 
     private fun db() : AppDatabase {

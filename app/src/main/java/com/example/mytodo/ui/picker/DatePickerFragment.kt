@@ -22,8 +22,11 @@ class DatePickerFragment : BaseFragment() {
     }
 
     override fun initEvent(rootView: View) {
+        /**
+         * The month that was set (0-11) for compatibility with java.util.Calendar.
+         */
        dp.setOnDateChangedListener { view, year, monthOfYear, dayOfMonth ->
-           localDate = LocalDate.of(year, monthOfYear, dayOfMonth)
+           localDate = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
            EventBus.getDefault().post(DateTimeMessage(localDate))
            findNavController().navigate(R.id.switchTime)
        }

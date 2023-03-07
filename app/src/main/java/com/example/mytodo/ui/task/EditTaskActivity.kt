@@ -2,6 +2,7 @@ package com.example.mytodo.ui.task
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,26 +14,29 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.*
 import com.example.mytodo.R
+import com.example.mytodo.logic.*
 import com.example.mytodo.logic.domain.TaskItem
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Task
-import com.example.mytodo.logic.isEmptyTime
-import com.example.mytodo.logic.showToast
-import com.example.mytodo.logic.toLocalTimeName
-import com.example.mytodo.logic.toStringDesc
 import com.example.mytodo.logic.utils.ColorUtils
 import com.example.mytodo.logic.utils.FlagHelper
+import com.example.mytodo.logic.work.RemindWorker
 import com.example.mytodo.ui.picker.DtPickerDiaLogFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import java.time.LocalDateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class EditTaskActivity : AppCompatActivity() {
 
-    private val taskViewModel by lazy {  ViewModelProvider(TasksMainActivity.viewModelOwner!!).get(TasksViewModel::class.java) }
+//    private val taskViewModel by lazy { ViewModelProvider(TasksMainActivity.viewModelOwner!!)[TasksViewModel::class.java] }
+    private lateinit var taskViewModel : TasksViewModel
+    private lateinit var context: Context
+
     private lateinit var task : Task
     private lateinit var originTask : Task
     private lateinit var projectName : String
@@ -63,11 +67,17 @@ class EditTaskActivity : AppCompatActivity() {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowTitleEnabled(false)
         }
+        context = this
+
+        taskViewModel = if (TasksMainActivity.viewModelOwner != null) {
+            ViewModelProvider(TasksMainActivity.viewModelOwner!!)[TasksViewModel::class.java]
+        }else {
+            ViewModelProvider(this)[TasksViewModel::class.java]
+        }
 
         task = intent.getSerializableExtra(Constants.TASK) as Task
         originTask = task.copy()
         projectName = intent.getStringExtra(Constants.PROJECT_NAME).toString()
-
         init()
 
         initClickListener()
@@ -134,6 +144,16 @@ class EditTaskActivity : AppCompatActivity() {
                 task.remindTime = time
                 // 更新UI
                setRemindTimeStyle(true)
+                val data = Data.Builder()
+                    .putString(Constants.PROJECT_NAME, projectName)
+                    .putByteArray(Constants.TASK_BYTE, task.toByteArray())
+                    .build()
+                // 设置任务，提交提醒闹钟
+                val remindRequest = OneTimeWorkRequest.Builder(RemindWorker::class.java)
+                    .setInputData(data)
+                    .addTag(RemindWorker.Tag).build()
+                WorkManager.getInstance(context)
+                    .enqueue(remindRequest)
             }
         })
     }
@@ -189,6 +209,7 @@ class EditTaskActivity : AppCompatActivity() {
             remindDiaLog.show()
         }
 
+        // TODO
         val addEndTimeCard : MaterialCardView = findViewById(R.id.addEndTimeCard)
         addEndTimeCard.setOnClickListener {
             val ca = Calendar.getInstance()
@@ -245,16 +266,21 @@ class EditTaskActivity : AppCompatActivity() {
             if (hasRemind) {
                 remindTaskLayout.visibility = View.VISIBLE
                 remindTaskHint.visibility = View.GONE
-                remindTaskIcon.imageTintList = ColorUtils.setColorHint(R.color.light_blue)
-                remindTaskHint.setHintTextColor(ColorUtils.setColorHint(R.color.light_blue))
                 remindTime.text = "在 ${task.remindTime?.toLocalTimeName()} 时提醒我"
                 remindDate.text = task.remindTime?.toStringDesc()
+                // 如果时间没过才显示颜色
+                if (LocalDateTime.now().isBefore(task.remindTime)) {
+                    remindTaskIcon.imageTintList = ColorUtils.setColorHint(R.color.light_blue)
+                    remindTaskHint.setHintTextColor(ColorUtils.setColorHint(R.color.light_blue))
+                    remindTime.setTextColor(ColorUtils.setColorHint(R.color.light_blue))
+                }
             }else {
                 remindTaskLayout.visibility = View.GONE
                 remindTaskHint.visibility = View.VISIBLE
                 remindTaskIcon.imageTintList = null
                 remindTaskHint.text = "提醒我"
                 remindTaskHint.setHintTextColor(null)
+                remindTime.setTextColor(null)
             }
         }
 

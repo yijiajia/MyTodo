@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.mytodo.logic.dao.AppDatabase
 import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.logic.domain.entity.Task
+import com.example.mytodo.logic.equalsUntilMinute
 import com.example.mytodo.logic.toSH
 import com.example.mytodo.logic.toStringDesc
 import kotlinx.coroutines.*
@@ -17,7 +18,10 @@ import org.junit.runner.RunWith
 import org.junit.Assert.*
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Month
+import java.time.ZoneId
 import java.time.ZoneOffset
+import java.util.TimeZone
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -86,8 +90,30 @@ class ExampleInstrumentedTest {
 
     @Test
     fun DateTimeConverterTest() {
-        println(LocalDate.now().toEpochDay())
+      /*  println(LocalDate.now().toEpochDay())
         println(LocalDate.ofEpochDay(LocalDate.now().toEpochDay()))
         println(LocalDateTime.ofEpochSecond(0,0, ZoneOffset.ofHours(8)))
+*/
+        var now = 26
+        val otherTime = LocalDateTime.of(2022,Month.MARCH,5,17,now)
+        val otherTime2 = LocalDateTime.of(2023,Month.MARCH,5,17,now)
+        val otherTime3 = LocalDateTime.of(2023,Month.MARCH,5,17,now + 1 )
+
+        runBlocking {
+            println(LocalDateTime.now().toLocalDate())
+            println("result1: ${otherTime2.toLocalDate().isEqual(otherTime3.toLocalDate())}")
+            println("result1: ${LocalDateTime.now().toLocalDate().isEqual(otherTime3.toLocalDate())}")
+            println("result2: ${LocalDateTime.now().toSH().equalsUntilMinute(otherTime)}")
+            println("result3: ${LocalDateTime.now().toSH().equalsUntilMinute(otherTime2)}")
+            println("result4: ${LocalDateTime.now().toSH().equalsUntilMinute(otherTime3)}")
+        }
+    }
+
+    @Test
+    fun ZoneTest() {
+        println(ZoneId.systemDefault())
+        println(LocalDateTime.now().equals(LocalDate.now()))
+        println(LocalDateTime.now().toStringDesc())
+
     }
 }

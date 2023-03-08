@@ -27,6 +27,7 @@ import com.example.mytodo.ui.picker.DtPickerDiaLogFragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -50,6 +51,9 @@ class EditTaskActivity : AppCompatActivity() {
     private lateinit var remindTime : TextView
     private lateinit var remindDate : TextView
 
+    private lateinit var addEndTimeIcon : ImageView
+    private lateinit var addEndTimeHint : TextView
+
 
     private lateinit var nameTextEdit : EditText
     private lateinit var descTextEdit : EditText
@@ -57,6 +61,7 @@ class EditTaskActivity : AppCompatActivity() {
     private lateinit var dtPicDialog : DtPickerDiaLogFragment
 
     private var curFlagState : Boolean = false
+    private var hasEndTime = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,6 +126,9 @@ class EditTaskActivity : AppCompatActivity() {
         remindTime = findViewById(R.id.remindTime)
         remindDate = findViewById(R.id.remindDate)
 
+        addEndTimeIcon = findViewById(R.id.addEndTimeIcon)
+        addEndTimeHint = findViewById(R.id.addEndTimeHint)
+
         nameText.visibility = View.GONE
         nameTextEdit.visibility = View.VISIBLE
 
@@ -136,8 +144,11 @@ class EditTaskActivity : AppCompatActivity() {
         curFlagState = FlagHelper.containsFlag(task.flag, Task.IN_ONE_DAY)
         setOneDayStyle(curFlagState)
 
+
+        hasEndTime = !task.endTime?.isEqual(LocalDate.of(1970,1,1))!!
         Log.d(Constants.DEBUG_TAG,"task=$task")
         setRemindTimeStyle(!task.remindTime?.isEmptyTime()!!)
+        setEndTimeStyle(hasEndTime)
 
         dtPicDialog = DtPickerDiaLogFragment(object : DateTimeClickListener{
             override fun onSaveDateTimeClick(time: LocalDateTime) {
@@ -209,19 +220,26 @@ class EditTaskActivity : AppCompatActivity() {
             remindDiaLog.show()
         }
 
-        // TODO
+
         val addEndTimeCard : MaterialCardView = findViewById(R.id.addEndTimeCard)
         addEndTimeCard.setOnClickListener {
             val ca = Calendar.getInstance()
             var mYear = ca[Calendar.YEAR]
             var mMonth = ca[Calendar.MONTH]
             var mDay = ca[Calendar.DAY_OF_MONTH]
+            if (hasEndTime) {
+                mYear = task.endTime?.year!!
+                mMonth = task.endTime?.month?.value!! - 1
+                mDay = task.endTime?.dayOfMonth!!
+            }
             val dialog = DatePickerDialog(
                 this, { _, year, month, dayOfMonth ->
                     mYear = year
                     mMonth = month
                     mDay = dayOfMonth
                     val mDate = "${year}/${month + 1}/${dayOfMonth}"
+                    task.endTime = LocalDate.of(year, month + 1, dayOfMonth)
+                    setEndTimeStyle(true)
                     // 将选择的日期赋值给TextView
                     Log.d("", "mDate=$mDate")
                 },
@@ -280,10 +298,20 @@ class EditTaskActivity : AppCompatActivity() {
                 remindTaskIcon.imageTintList = null
                 remindTaskHint.text = "提醒我"
                 remindTaskHint.setHintTextColor(null)
-                remindTime.setTextColor(null)
+//                remindTime.setTextColor(null)
             }
         }
+    }
 
+    /**
+     * 设置截止日期的样式
+     */
+    private fun setEndTimeStyle(hasEndTime: Boolean) {
+        if (hasEndTime) {
+            addEndTimeIcon.imageTintList = ColorUtils.setColorHint(R.color.light_blue)
+            addEndTimeHint.setHintTextColor(ColorUtils.setColorHint(R.color.light_blue))
+            addEndTimeHint.text = task.endTime?.toStringDesc()
+        }
     }
 
 

@@ -114,6 +114,7 @@ class ExampleInstrumentedTest {
         println(ZoneId.systemDefault())
         println(LocalDateTime.now().equals(LocalDate.now()))
         println(LocalDateTime.now().toStringDesc())
+        println(LocalDate.now().toStringDesc())
 
     }
 }

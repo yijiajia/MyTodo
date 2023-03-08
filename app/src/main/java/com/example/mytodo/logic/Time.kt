@@ -13,9 +13,13 @@ import java.util.*
  * 格式：MM月dd日周几，近两天则输出今天/明天
  */
 fun LocalDateTime.toStringDesc() : String {
-    if (toLocalDate().isEqual(LocalDate.now())) {
+    return toLocalDate().toStringDesc()
+}
+
+fun LocalDate.toStringDesc() : String {
+    if (this.isEqual(LocalDate.now())) {
         return "今天"
-    }else if (toLocalDate().isEqual(LocalDate.now().plusDays(1))) {
+    }else if (this.isEqual(LocalDate.now().plusDays(1))) {
         return "明天"
     }
     val formatter = DateTimeFormatter.ofPattern("MM月dd日")

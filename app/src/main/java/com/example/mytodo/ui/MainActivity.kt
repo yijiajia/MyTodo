@@ -1,5 +1,6 @@
-package com.example.mytodo
+package com.example.mytodo.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mytodo.R
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.ui.project.CustomProjectAdapter
 import com.example.mytodo.ui.project.DefaultProjectAdapter
@@ -18,6 +20,7 @@ import com.example.mytodo.logic.mapper.ProjectVo
 import com.example.mytodo.logic.showToast
 import com.example.mytodo.ui.project.AddProjectDiaLogFragment
 import com.example.mytodo.ui.project.ProjectViewModel
+import com.example.mytodo.ui.search.SearchMainActivity
 import com.google.android.material.bottomappbar.BottomAppBar
 
 class MainActivity : AppCompatActivity() {
@@ -31,14 +34,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val DEFAULT_NUM = 0 // 默认的任务数
     }
-
-    private var defaultList = mutableListOf(
-        ProjectVo(ProjectSign.ONE_DAY, 1, R.drawable.time),
-        ProjectVo(ProjectSign.START, 0, R.drawable.zhongyao),
-        ProjectVo(ProjectSign.PLAN, 0, R.drawable.plan),
-        ProjectVo(ProjectSign.ASSIGNED, 0, R.drawable.tome)
-    )
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +53,10 @@ class MainActivity : AppCompatActivity() {
         customProjectRecyclerView.adapter = adapter
 
         searchTasks.setOnClickListener {
-            Toast.makeText(this, "搜索", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, SearchMainActivity::class.java).apply {
+                putExtra(Constants.PROJECT_SIGN, ProjectSign.SEARCH)
+            }
+            startActivity(intent)
         }
         bottomBar.setOnMenuItemClickListener {
             when(it.itemId) {
@@ -97,14 +95,14 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.search_task -> {
                 Toast.makeText(this, "搜索", Toast.LENGTH_SHORT).show()
             }
         }
         return true
-    }
+    }*/
 
     private fun refreshObserve() {
 

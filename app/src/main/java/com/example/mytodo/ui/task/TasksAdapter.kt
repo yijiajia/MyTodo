@@ -1,13 +1,9 @@
 package com.example.mytodo.ui.task
 
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
@@ -15,12 +11,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.example.mytodo.R
-import com.example.mytodo.logic.TaskClickListener
+import com.example.mytodo.logic.listener.TaskClickListener
 import com.example.mytodo.logic.domain.TaskItem
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Task
-import com.example.mytodo.logic.domain.constants.TaskState
-import com.example.mytodo.logic.utils.FlagHelper
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 

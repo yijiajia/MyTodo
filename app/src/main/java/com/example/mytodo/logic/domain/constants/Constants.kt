@@ -7,7 +7,7 @@ class Constants {
 
         const val MAIN_PAGE_TAG = "mainPage"    // 首页
         const val TASK_PAGE_TAG = "taskPage"    // 任务页面
-        const val DEBUG_TAG = "debugPage"    // 任务页面
+        const val DEBUG_TAG = "debugPage"      // 测试tag
 
         const val PROJECT_SIGN = "projectSign"
 
@@ -15,6 +15,7 @@ class Constants {
         const val TASK_BYTE = "taskByte"
 
         const val ALARM_ID = "alarmId"
+        const val SOURCE = "source" // 来源
     }
 
 }

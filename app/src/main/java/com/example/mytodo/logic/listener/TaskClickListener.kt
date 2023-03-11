@@ -1,4 +1,4 @@
-package com.example.mytodo.logic
+package com.example.mytodo.logic.listener
 
 import com.example.mytodo.logic.domain.entity.Task
 import com.google.android.material.card.MaterialCardView

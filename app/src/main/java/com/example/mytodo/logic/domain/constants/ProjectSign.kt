@@ -5,6 +5,8 @@ import java.io.Serializable
 
 enum class ProjectSign( val signName: String,val imageId : Int) : Serializable {
 
+    SEARCH("搜索", R.drawable.search),
+
     INTRO("入门", R.drawable.rumeng),
     ZAHUO("杂货", R.drawable.zahuo),
 

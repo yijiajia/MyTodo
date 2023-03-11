@@ -46,4 +46,6 @@ interface TasksDao {
     @Query("select * from task where remindTime BETWEEN :beginTime and :endTime order by remindTime")
     fun searchTasksByRemindToday(beginTime: LocalDateTime, endTime: LocalDateTime): List<Task>
 
+    @Query("select * from task where name like '%' || :name || '%'")
+    fun searchTasksLikeName(name : String): List<Task>
 }

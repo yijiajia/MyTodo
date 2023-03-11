@@ -2,13 +2,7 @@ package com.example.mytodo.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.FragmentContainerView
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.example.mytodo.R
-import com.example.mytodo.ui.picker.DtPickerDiaLogFragment
 
 class MainTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

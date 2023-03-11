@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.mytodo.logic.dao.AppDatabase
+import com.example.mytodo.logic.dao.ProjectDao
 import com.example.mytodo.logic.dao.TasksDao
 import com.example.mytodo.logic.domain.entity.Task
 import kotlinx.coroutines.runBlocking
@@ -20,6 +21,7 @@ import java.time.LocalTime
 class RoomDbTest {
 
     lateinit var taskDao: TasksDao
+    lateinit var projectDao: ProjectDao
     lateinit var db : AppDatabase
 
     @Before
@@ -27,6 +29,7 @@ class RoomDbTest {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         db = AppDatabase.getDatabase(appContext)
         taskDao = db.getTaskDao()
+        projectDao = db.getProjectDao()
     }
 
     @After
@@ -85,6 +88,14 @@ class RoomDbTest {
             val endTime2: LocalDateTime =
                 LocalDateTime.of(now.year, now.month, now.dayOfMonth, 23, 59, 59)
             Log.d("","endTime=$endTime, endTime2=$endTime2 , equals=${endTime.equals(endTime2)}")
+        }
+    }
+
+    @Test
+    fun getProjectNameByJoinProjectId() {
+        runBlocking {
+            println(projectDao.getProjectById(8))
+            println(projectDao.getProjectById(8).title)
         }
     }
 

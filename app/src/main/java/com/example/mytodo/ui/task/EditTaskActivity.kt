@@ -6,7 +6,6 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -17,20 +16,23 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.work.*
 import com.example.mytodo.R
 import com.example.mytodo.logic.*
+import com.example.mytodo.logic.domain.PageSource
 import com.example.mytodo.logic.domain.TaskItem
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Task
+import com.example.mytodo.logic.listener.DateTimeClickListener
 import com.example.mytodo.logic.utils.ColorUtils
 import com.example.mytodo.logic.utils.FlagHelper
 import com.example.mytodo.logic.work.RemindWorker
 import com.example.mytodo.ui.picker.DtPickerDiaLogFragment
+import com.example.mytodo.ui.project.ProjectViewModel
+import com.example.mytodo.ui.search.SearchMainActivity
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class EditTaskActivity : AppCompatActivity() {
 
@@ -41,6 +43,8 @@ class EditTaskActivity : AppCompatActivity() {
     private lateinit var task : Task
     private lateinit var originTask : Task
     private lateinit var projectName : String
+
+    private lateinit var projectNameTxt : TextView
 
     private lateinit var addToOneDayIcon : ImageView
     private lateinit var addToOneDayHint : TextView
@@ -76,13 +80,25 @@ class EditTaskActivity : AppCompatActivity() {
 
         taskViewModel = if (TasksMainActivity.viewModelOwner != null) {
             ViewModelProvider(TasksMainActivity.viewModelOwner!!)[TasksViewModel::class.java]
+        }else if (SearchMainActivity.viewModelOwner != null){
+            ViewModelProvider(SearchMainActivity.viewModelOwner!!)[TasksViewModel::class.java]
         }else {
+            Log.d("","自定义生成viewModel")
             ViewModelProvider(this)[TasksViewModel::class.java]
         }
 
         task = intent.getSerializableExtra(Constants.TASK) as Task
         originTask = task.copy()
         projectName = intent.getStringExtra(Constants.PROJECT_NAME).toString()
+        if (projectName.isEmpty() or ("null" == projectName)) {
+            val projectViewModel = ViewModelProvider(this)[ProjectViewModel::class.java]
+            projectViewModel.getProjectTitleById(task.projectId)
+            projectViewModel.projectNameLiveData.observe(this) {
+                projectName = it.title
+                projectNameTxt.text = projectName
+            }
+        }
+
         init()
 
         initClickListener()
@@ -110,7 +126,7 @@ class EditTaskActivity : AppCompatActivity() {
 
 
     private fun init() {
-        val projectNameTxt : TextView = findViewById(R.id.edit_task_projectName)
+        projectNameTxt = findViewById(R.id.edit_task_projectName)
         val nameText : MaterialTextView = findViewById(R.id.task_name_text_view)
         nameTextEdit = findViewById(R.id.task_name_text_view_edit)
         descTextEdit = findViewById(R.id.edit_task_desc)
@@ -150,7 +166,7 @@ class EditTaskActivity : AppCompatActivity() {
         setRemindTimeStyle(!task.remindTime?.isEmptyTime()!!)
         setEndTimeStyle(hasEndTime)
 
-        dtPicDialog = DtPickerDiaLogFragment(object : DateTimeClickListener{
+        dtPicDialog = DtPickerDiaLogFragment(object : DateTimeClickListener {
             override fun onSaveDateTimeClick(time: LocalDateTime) {
                 task.remindTime = time
                 // 更新UI
@@ -256,6 +272,10 @@ class EditTaskActivity : AppCompatActivity() {
                 Log.d(Constants.TASK_PAGE_TAG,"set in oneDay is ok")
             }
         }
+
+        taskViewModel.delTaskLiveData.observe(this) {
+            Log.d("","监听到删除了")
+        }
     }
 
     /**
@@ -315,8 +335,5 @@ class EditTaskActivity : AppCompatActivity() {
     }
 
 
-    interface DateTimeClickListener {
-        fun onSaveDateTimeClick(time: LocalDateTime)
-    }
 
 }

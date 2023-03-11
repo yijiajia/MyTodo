@@ -1,8 +1,6 @@
 package com.example.mytodo.ui.picker
 
-import android.app.Activity
-import android.app.AlertDialog
-import android.app.Dialog
+
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -14,15 +12,11 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.findFragment
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.example.mytodo.MyToDoApplication
 import com.example.mytodo.R
+import com.example.mytodo.logic.listener.DateTimeClickListener
 import com.example.mytodo.logic.domain.DateTimeMessage
-import com.example.mytodo.ui.task.EditTaskActivity
-import kotlinx.android.synthetic.main.dialog_datetime_picker.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -30,27 +24,12 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class DtPickerDiaLogFragment(private val dateTimeClick: EditTaskActivity.DateTimeClickListener) : DialogFragment() {
+class DtPickerDiaLogFragment(private val dateTimeClick: DateTimeClickListener) : DialogFragment() {
 
     private var chooseDate: LocalDate? = null
     private var chooseTime: LocalTime? = null
     private var chooseDateTime : LocalDateTime? = null
 
-   /* override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Log.d("debug","onCreateDialog")
-        return activity?.let {
-            val builder = AlertDialog.Builder(it)
-
-            builder.setView(curView)
-                .setPositiveButton("保存") { dialog, _ ->
-                    Log.d("","点击了保存按钮")
-                }
-                .setNegativeButton("取消") { dialog, _ ->
-                    dialog.dismiss()
-                }
-            builder.create()
-        } ?: throw java.lang.IllegalStateException("Activity not found")
-    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater,

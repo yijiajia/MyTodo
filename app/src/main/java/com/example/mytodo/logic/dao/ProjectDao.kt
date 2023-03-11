@@ -1,5 +1,6 @@
 package com.example.mytodo.logic.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -23,5 +24,9 @@ interface ProjectDao {
 
     @Query("delete from project where id = :id")
     fun delProjectById(id : Long)
+
+    @Query("select * from project where id = :projectId")
+    fun getProjectById(projectId: Long) : Project
+
 
 }

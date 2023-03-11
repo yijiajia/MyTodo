@@ -14,15 +14,16 @@ abstract class BaseFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = LayoutInflater.from(container?.context).inflate(getResourceId(), container, false)
+        val rootView = inflater.inflate(getResourceId(), container, false)
         initView(rootView)
         initEvent(rootView)
         return rootView
     }
 
+    open fun initView(rootView: View) {}
+
     open fun initEvent(rootView: View) {}
 
-    open fun initView(rootView: View) {}
 
 
     abstract fun getResourceId() : Int

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.search.SearchMainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:menu="@menu/search_menu">
+
+            <EditText
+                android:id="@+id/searchContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="搜索"
+                android:textColorHint="@color/light_blue"
+                android:background="@color/white"/>
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+   <fragment
+       android:id="@+id/tasksFragment"
+       android:name="com.example.mytodo.ui.task.TasksFragment"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       tools:layout="@layout/fragment_task_list"
+       app:layout_behavior="@string/appbar_scrolling_view_behavior"
+       android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/empty_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_gravity="center"
+            android:src="@drawable/project_completed" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="你想查找什么内容？可在任务、步骤和笔记内搜索"
+            android:textColor="@color/light_blue"
+            android:textSize="16sp"
+            android:textAppearance="?attr/textAppearanceBodyLarge" />
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

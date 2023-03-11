@@ -66,4 +66,11 @@ class ProjectViewModel : ViewModel() {
         }
     }
 
+    val projectNameLiveData = MutableLiveData<Project>()
+    fun getProjectTitleById(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            projectNameLiveData.postValue(Repository.getProjectById(id))
+        }
+    }
+
 }

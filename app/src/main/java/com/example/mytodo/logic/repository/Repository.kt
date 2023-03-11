@@ -30,6 +30,8 @@ object Repository {
         tasksDao.deleteTaskByProjectId(id)
     }
 
+    fun getProjectById(projectId: Long) = projectDao.getProjectById(projectId)
+
     fun updateProjectNum(moveNum: Int,id: Long) = projectDao.updateProjectNum(moveNum, id)
 
     fun searchTasks(searchArg: SearchArg) = fire(Dispatchers.IO) {
@@ -38,6 +40,13 @@ object Repository {
             Cmd.SEARCH_BY_PID ->  tasksDao.searchTasksByProjectId(searchArg.value as Long)
             Cmd.SEARCH_IMPORTANT -> searchImportantTasks()
             Cmd.SEARCH_ONE_DAY -> tasksDao.searchTasksByFlag(Task.IN_ONE_DAY)
+            Cmd.SEARCH_LIKE_NAME -> {
+                val searchValue = searchArg.value as String
+                if (searchValue.isEmpty()) {
+                    return@fire Result.success(listOf<Task>())
+                }
+                tasksDao.searchTasksLikeName(searchValue)
+            }
             else -> throw IllegalArgumentException("arg is error")
         }
         tasksList = tasksList.sortedBy { task -> task.state }
@@ -82,6 +91,11 @@ object Repository {
     fun updateTaskFlag(id: Long, flag: Int) = fire(Dispatchers.IO) {
         Result.success(tasksDao.updateFlag(id, flag))
     }
+
+    fun searchTasksLikeName(name: String) = fire(Dispatchers.IO) {
+        Result.success(tasksDao.searchTasksLikeName(name))
+    }
+
 
     fun getInteger4Alarm(key: String, defaultValue: Int) = SharedPreDao.getInteger4Alarm(key, defaultValue)
 

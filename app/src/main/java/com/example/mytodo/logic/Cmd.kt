@@ -26,6 +26,11 @@ enum class Cmd {
      */
     SEARCH_ONE_DAY,
 
+    /**
+     * 根据name模糊查询
+     */
+    SEARCH_LIKE_NAME,
+
 
     /**
      * 兼容报错的

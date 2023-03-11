@@ -94,8 +94,7 @@ class RoomDbTest {
     @Test
     fun getProjectNameByJoinProjectId() {
         runBlocking {
-            println(projectDao.getProjectById(8))
-            println(projectDao.getProjectById(8).title)
+            println(projectDao.getProjectTitleById(8))
         }
     }
 

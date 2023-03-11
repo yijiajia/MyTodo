@@ -25,8 +25,7 @@ interface ProjectDao {
     @Query("delete from project where id = :id")
     fun delProjectById(id : Long)
 
-    @Query("select * from project where id = :projectId")
-    fun getProjectById(projectId: Long) : Project
-
+    @Query("select title from project where id = :projectId")
+    fun getProjectTitleById(projectId: Long) : LiveData<String>
 
 }

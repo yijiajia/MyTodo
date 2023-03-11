@@ -92,9 +92,8 @@ class EditTaskActivity : AppCompatActivity() {
         projectName = intent.getStringExtra(Constants.PROJECT_NAME).toString()
         if (projectName.isEmpty() or ("null" == projectName)) {
             val projectViewModel = ViewModelProvider(this)[ProjectViewModel::class.java]
-            projectViewModel.getProjectTitleById(task.projectId)
-            projectViewModel.projectNameLiveData.observe(this) {
-                projectName = it.title
+            projectViewModel.getProjectTitleById(task.projectId).observe(this) {
+                projectName = it
                 projectNameTxt.text = projectName
             }
         }

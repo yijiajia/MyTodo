@@ -1,5 +1,6 @@
 package com.example.mytodo.logic.repository
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.example.mytodo.MyToDoApplication
 import com.example.mytodo.logic.Cmd
@@ -30,7 +31,7 @@ object Repository {
         tasksDao.deleteTaskByProjectId(id)
     }
 
-    fun getProjectById(projectId: Long) = projectDao.getProjectById(projectId)
+    fun getProjectTitleById(projectId: Long) = projectDao.getProjectTitleById(projectId)
 
     fun updateProjectNum(moveNum: Int,id: Long) = projectDao.updateProjectNum(moveNum, id)
 

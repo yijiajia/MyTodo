@@ -6,13 +6,20 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.example.mytodo.logic.dao.AppDatabase
 import com.example.mytodo.logic.dao.ProjectDao
 import com.example.mytodo.logic.dao.TasksDao
+import com.example.mytodo.logic.domain.ProjectData
+import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.logic.domain.entity.Task
+import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.File
+import java.io.FileOutputStream
+import java.io.FileWriter
 import java.io.IOException
+import java.io.PrintWriter
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -95,6 +102,23 @@ class RoomDbTest {
     fun getProjectNameByJoinProjectId() {
         runBlocking {
             println(projectDao.getProjectTitleById(8))
+        }
+    }
+
+    @Test
+    fun exportOldData() {
+        runBlocking {
+            val projects= projectDao.getAllList()
+            val projectDataList = mutableListOf<ProjectData>()
+            projects.forEach {  project ->
+                val tasks = taskDao.searchTasksByProjectId(project.id)
+                projectDataList.add(ProjectData(project,tasks))
+            }
+            val path = "E:\\code\\android\\MyToDo\\projectDataList.json"
+            PrintWriter(FileWriter(path)).use {
+                val gson = Gson()
+                it.write(gson.toJson(projectDataList))
+            }
         }
     }
 

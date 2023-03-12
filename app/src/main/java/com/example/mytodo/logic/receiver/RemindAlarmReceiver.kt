@@ -14,6 +14,7 @@ import com.example.mytodo.R
 import com.example.mytodo.logic.domain.constants.Constants
 import com.example.mytodo.logic.domain.entity.Task
 import com.example.mytodo.logic.equalsUntilMinute
+import com.example.mytodo.logic.repository.Repository
 import com.example.mytodo.logic.toObject
 import com.example.mytodo.ui.task.EditTaskActivity
 
@@ -43,7 +44,8 @@ class RemindAlarmReceiver: BroadcastReceiver() {
                 putExtra(Constants.PROJECT_NAME, projectName)
                 setPackage("com.example.mytodo")
             }
-            val pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            val alarmId = Repository.getAndSet4Alarm(Constants.ALARM_ID, 0)
+            val pi = PendingIntent.getActivity(context, alarmId, intent, PendingIntent.FLAG_IMMUTABLE)
             val notification = NotificationCompat.Builder(context, channelId)   // 必须传入已经创建好的渠道ID
                 .setContentTitle("提醒")
                 .setContentText(task.name)

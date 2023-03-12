@@ -25,8 +25,7 @@ class InitWorker(context: Context, params: WorkerParameters) : Worker(context, p
         operator fun invoke() {
             Log.d("","初始化数据任务 invoke")
             val projectList = mutableListOf(
-                Project("MySQL",0, R.drawable.task),
-                Project("Redis",0, R.drawable.task)
+                Project("MySQL",0, R.drawable.task)
             )
 
             CoroutineScope(Dispatchers.IO).launch {

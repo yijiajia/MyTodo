@@ -24,8 +24,6 @@ object Repository {
         Result.success(projectDao.insertProject(project))
     }
 
-    fun deleteProject(project: Project) = projectDao.deleteProject(project)
-
     fun delProjectById(id : Long) {
         projectDao.delProjectById(id)
         tasksDao.deleteTaskByProjectId(id)
@@ -99,8 +97,12 @@ object Repository {
 
 
     fun getInteger4Alarm(key: String, defaultValue: Int) = SharedPreDao.getInteger4Alarm(key, defaultValue)
-
     fun setInteger4Alarm(key: String, value: Int) = SharedPreDao.setInteger4Alarm(key, value)
+    fun getAndSet4Alarm(key: String, defaultValue: Int) : Int {
+        val id = getInteger4Alarm(key, defaultValue)
+        setInteger4Alarm(key, id + 1)
+        return id
+    }
 
     fun getInteger4Broad(taskId: String) = SharedPreDao.getInteger4Broad(taskId)
     fun setInteger4Broad(taskId: String, requestCode: Int) = SharedPreDao.setInteger4Broad(taskId,requestCode)

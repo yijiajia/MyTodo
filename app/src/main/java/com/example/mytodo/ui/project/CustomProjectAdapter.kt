@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodo.R
 import com.example.mytodo.logic.domain.constants.Constants
+import com.example.mytodo.logic.domain.constants.ProjectSign
 import com.example.mytodo.logic.domain.entity.Project
 import com.example.mytodo.ui.task.TasksMainActivity
 
@@ -32,6 +33,15 @@ class CustomProjectAdapter(val context: Context, val customProjectList: List<Pro
             val intent = Intent(context, TasksMainActivity::class.java).apply {
                 putExtra(Constants.PROJECT_ID,project.id)
                 putExtra(Constants.PROJECT_NAME,project.title)
+                // TODO 添加默认模块的projectSign参数 or 将默认模块的数据在初始化时导入db
+                if (project.id == 0L) {
+                    val sign: ProjectSign = when(project.title) {
+                        ProjectSign.INTRO.signName -> ProjectSign.INTRO
+                        ProjectSign.ZAHUO.signName -> ProjectSign.ZAHUO
+                        else -> throw IllegalArgumentException("sign arg is error;project=$project")
+                    }
+                    putExtra(Constants.PROJECT_SIGN,sign)
+                }
             }
             context.startActivity(intent)
         }

@@ -14,3 +14,12 @@
 #### 待实现功能
 
 * 项目可移动，任务可重新分组。系统模块的默认数据
+
+
+
+#### 技术栈
+
+* Kotlin
+* ViewModel + LiveData + Room + AlarmManager + WorkerManager
+* navigation + DiaLog + 前台通知
+

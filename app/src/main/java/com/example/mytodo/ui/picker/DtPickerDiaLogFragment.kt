@@ -113,6 +113,4 @@ class DtPickerDiaLogFragment(private val dateTimeClick: DateTimeClickListener) :
         Log.d("","接收到event消息，chooseDate=$chooseDate,chooseTime=$chooseTime")
     }
 
-
-
 }

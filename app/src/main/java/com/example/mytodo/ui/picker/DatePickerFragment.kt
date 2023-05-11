@@ -18,7 +18,6 @@ class DatePickerFragment : BaseFragment() {
 
     override fun initView(rootView: View) {
         dp = rootView.findViewById(R.id.datePicker)
-//        localDate = LocalDate.now()
     }
 
     override fun initEvent(rootView: View) {
